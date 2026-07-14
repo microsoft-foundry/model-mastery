@@ -1,0 +1,32 @@
+# =============================================================================
+# cohere/lab-1-foundry-maf/requirements.txt
+#
+# Dependencies for Lab 1 — Microsoft Agent Framework (MAF) with Cohere on
+# Microsoft Foundry. This lab runs entirely locally because the hosted Foundry
+# Agent Service does not support Cohere models today; MAF gives us the same
+# multi-agent shape against the same `command-a` deployment.
+#
+# This file is chained from the root requirements.txt and is also safe to
+# install on its own:  pip install -r cohere/lab-1-foundry-maf/requirements.txt
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Microsoft Agent Framework (MAF)
+# -----------------------------------------------------------------------------
+# `agent-framework` is the open-source multi-agent runtime we use to build the
+# concierge + flight/hotel/car specialists. The `agent_framework.foundry`
+# subpackage ships `FoundryChatClient`, which talks to a Foundry project via
+# the OpenAI-compatible Responses API, the same path Foundry-hosted agents use, so
+# This lab lights up Cohere `command-a` without any custom HTTP plumbing.
+agent-framework>=1.8
+
+# -----------------------------------------------------------------------------
+# Evaluation + red-team
+# -----------------------------------------------------------------------------
+# `azure-ai-evaluation` exposes the same Quality/Safety/Agentic evaluators we
+# used in the hosted-agent path plus the local `RedTeam` scanner. The `[redteam]` extra pulls
+# in PyRIT, which is required when running scans from a developer machine.
+# `pyrit` is also listed explicitly so the install surfaces a clear error if
+# the optional extra is unavailable for the active Python version.
+azure-ai-evaluation[redteam]>=1.0.0
+pyrit>=0.6

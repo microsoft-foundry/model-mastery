@@ -1,7 +1,5 @@
 # Root dependency entrypoint used by .devcontainer/post-create.sh.
 
-# Install each provider-specific requirements file below.
+# Install Cohere workshop requirements 
 -r cohere/requirements.txt
 -r cohere/lab-1-foundry-maf/requirements.txt
--r foundry/requirements.txt
--r anthropic/requirements.txt

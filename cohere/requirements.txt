@@ -1,0 +1,92 @@
+# =============================================================================
+# cohere/requirements.txt
+#
+# Dependencies for the "Cohere on Microsoft Foundry" 3-hour workshop.
+# Installed automatically in Codespaces via the root requirements.txt
+# (.devcontainer/post-create.sh -> `pip install -r requirements.txt`),
+# which chains `-r cohere/requirements.txt`.
+#
+# Sections are grouped + commented so this file doubles as developer
+# orientation: scanning it tells you the shape of the workshop stack.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Microsoft Foundry / Azure SDKs
+# -----------------------------------------------------------------------------
+# `azure-ai-projects` is the Foundry SDK used throughout Lab 1 to talk to the
+# project, list deployments, create/run prompt agents, drive the OpenAI-compatible
+# chat client, and read evaluations. Pinned to v2.x preview because the prompt-agent
+# `create_version` + `PromptAgentDefinition` / `FunctionTool` shapes used by
+# `02-build-agent.ipynb` only exist in the v2 preview surface.
+# `azure-ai-evaluation` exposes the built-in Quality / Safety / Agentic
+# evaluators we use in Lab 1's three evaluation rounds, plus the base classes
+# we extend for the custom policy-adherence evaluator.
+# `azure-identity` provides DefaultAzureCredential (preferred over API keys).
+# `azure-monitor-opentelemetry` wires traces/metrics to App Insights so the
+# Foundry portal's Monitoring tab lights up during the Lab 1 load test.
+azure-ai-projects>=2.2.0
+azure-ai-evaluation>=1.0.0
+azure-identity>=1.17
+azure-monitor-opentelemetry>=1.6
+
+# -----------------------------------------------------------------------------
+# Cohere SDK
+# -----------------------------------------------------------------------------
+# Used when we need Cohere-native call shapes (e.g., rerank request format)
+# that aren't surfaced by the Foundry SDK. Lab 2 leans on this heavily.
+cohere>=5.0
+
+# -----------------------------------------------------------------------------
+# Vector store
+# -----------------------------------------------------------------------------
+# Lab 2 stores Cohere embeddings in ChromaDB for the embed + rerank exercises.
+chromadb>=0.6
+
+# -----------------------------------------------------------------------------
+# Data + viz
+# -----------------------------------------------------------------------------
+# Used across Lab 1 (eval result dataframes, plotting trend across rounds) and
+# Lab 2 (corpus manipulation, embedding visualizations).
+pandas>=2.0
+numpy>=1.24
+matplotlib>=3.0
+seaborn>=0.12
+pillow>=10.0
+
+# -----------------------------------------------------------------------------
+# Notebook tooling
+# -----------------------------------------------------------------------------
+# `ipykernel` + `ipywidgets` for notebook execution and rich widgets.
+# `tqdm` for progress bars in long-running cells (eval loops, embeddings).
+# `python-dotenv` to load `.env` produced by Lab 0 into every notebook.
+# `PyYAML` for declarative agent/evaluator config we read in Lab 1.
+ipykernel>=6.0
+ipywidgets>=8.0
+tqdm>=4.0
+python-dotenv>=1.0
+PyYAML>=6.0
+
+# -----------------------------------------------------------------------------
+# Demo data sources
+# -----------------------------------------------------------------------------
+# `wikipedia-api` powers the Lab 2 rerank-over-wikipedia exercise.
+# `requests` is a general-purpose HTTP client used by mock booking data loaders.
+wikipedia-api>=0.6
+requests>=2.28
+
+# -----------------------------------------------------------------------------
+# Tracing / OpenTelemetry
+# -----------------------------------------------------------------------------
+# Lab 1's `_tracing.py` helper instruments httpx + the agent runtime so every
+# turn shows up in App Insights and surfaces in the Foundry Monitoring tab.
+opentelemetry-api>=1.27
+opentelemetry-sdk>=1.27
+opentelemetry-instrumentation-httpx>=0.48b0
+
+# -----------------------------------------------------------------------------
+# Load testing
+# -----------------------------------------------------------------------------
+# `httpx` is the async HTTP client used by Lab 1's load-test script.
+# `anyio` gives the script a portable async runtime for configurable RPS.
+httpx>=0.27
+anyio>=4.0

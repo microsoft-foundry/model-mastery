@@ -1,0 +1,57 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "value": "eastus2"
+    },
+    "foundryAccountName": {
+      "value": "mm-cohere-workshop"
+    },
+    "foundryProjectName": {
+      "value": "mm-cohere-project"
+    },
+    "appInsightsName": {
+      "value": "mm-cohere-appi"
+    },
+    "logAnalyticsName": {
+      "value": "mm-cohere-la"
+    },
+    "deployments": {
+      "value": [
+        {
+          "name": "text-embedding-3-small",
+          "modelName": "text-embedding-3-small",
+          "modelVersion": "1",
+          "modelFormat": "OpenAI",
+          "skuName": "GlobalStandard",
+          "capacity": 120
+        },
+        {
+          "name": "command-a",
+          "modelName": "cohere-command-a",
+          "modelVersion": "1",
+          "modelFormat": "Cohere",
+          "skuName": "GlobalStandard",
+          "capacity": 1
+        },
+        {
+          "name": "Cohere-rerank-v4.0-pro",
+          "modelName": "Cohere-rerank-v4.0-pro",
+          "modelVersion": "1",
+          "modelFormat": "Cohere",
+          "skuName": "GlobalStandard",
+          "capacity": 1
+        },
+        {
+          "name": "embed-v-4-0",
+          "modelName": "embed-v-4-0",
+          "modelVersion": "1",
+          "modelFormat": "Cohere",
+          "skuName": "GlobalStandard",
+          "capacity": 1
+        }
+      ]
+    }
+  }
+}

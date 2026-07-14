@@ -1,0 +1,206 @@
+[
+  {
+    "id": "htl-2001",
+    "name": "Fabrikam Midtown",
+    "city": "New York",
+    "city_tier": 1,
+    "nightly_rate_usd": 315,
+    "distance_to_downtown_miles": 1.1,
+    "available_from": "2026-07-01",
+    "available_to": "2026-12-31",
+    "refundable": true,
+    "amenities": [
+      "wifi",
+      "gym",
+      "breakfast"
+    ],
+    "preferred_supplier": true,
+    "policy_hint": "Within Tier 1 cap and close to business district."
+  },
+  {
+    "id": "htl-2002",
+    "name": "Grand Gotham Suites",
+    "city": "New York",
+    "city_tier": 1,
+    "nightly_rate_usd": 389,
+    "distance_to_downtown_miles": 0.4,
+    "available_from": "2026-07-01",
+    "available_to": "2026-12-31",
+    "refundable": true,
+    "amenities": [
+      "wifi",
+      "spa"
+    ],
+    "preferred_supplier": false,
+    "policy_hint": "Above Tier 1 cap."
+  },
+  {
+    "id": "htl-2003",
+    "name": "Northwind Seattle Center",
+    "city": "Seattle",
+    "city_tier": 2,
+    "nightly_rate_usd": 238,
+    "distance_to_downtown_miles": 0.8,
+    "available_from": "2026-07-01",
+    "available_to": "2026-12-31",
+    "refundable": true,
+    "amenities": [
+      "wifi",
+      "breakfast"
+    ],
+    "preferred_supplier": true,
+    "policy_hint": "Within Tier 2 cap and preferred supplier."
+  },
+  {
+    "id": "htl-2004",
+    "name": "Pioneer Square Loft Hotel",
+    "city": "Seattle",
+    "city_tier": 2,
+    "nightly_rate_usd": 271,
+    "distance_to_downtown_miles": 0.5,
+    "available_from": "2026-07-01",
+    "available_to": "2026-12-31",
+    "refundable": false,
+    "amenities": [
+      "wifi"
+    ],
+    "preferred_supplier": false,
+    "policy_hint": "Above Tier 2 cap."
+  },
+  {
+    "id": "htl-2005",
+    "name": "Contoso Loop Chicago",
+    "city": "Chicago",
+    "city_tier": 2,
+    "nightly_rate_usd": 224,
+    "distance_to_downtown_miles": 0.7,
+    "available_from": "2026-07-01",
+    "available_to": "2026-12-31",
+    "refundable": true,
+    "amenities": [
+      "wifi",
+      "gym"
+    ],
+    "preferred_supplier": true,
+    "policy_hint": "Compliant Chicago option."
+  },
+  {
+    "id": "htl-2006",
+    "name": "Lakeview Boutique",
+    "city": "Chicago",
+    "city_tier": 2,
+    "nightly_rate_usd": 198,
+    "distance_to_downtown_miles": 5.8,
+    "available_from": "2026-07-01",
+    "available_to": "2026-12-31",
+    "refundable": false,
+    "amenities": [
+      "wifi"
+    ],
+    "preferred_supplier": false,
+    "policy_hint": "Cheaper but farther than preferred."
+  },
+  {
+    "id": "htl-2007",
+    "name": "Miami Harbor Business Inn",
+    "city": "Miami",
+    "city_tier": 2,
+    "nightly_rate_usd": 246,
+    "distance_to_downtown_miles": 2.2,
+    "available_from": "2026-07-01",
+    "available_to": "2026-12-31",
+    "refundable": true,
+    "amenities": [
+      "wifi",
+      "pool"
+    ],
+    "preferred_supplier": true,
+    "policy_hint": "Within Tier 2 cap."
+  },
+  {
+    "id": "htl-2008",
+    "name": "South Beach Luxury Resort",
+    "city": "Miami",
+    "city_tier": 2,
+    "nightly_rate_usd": 420,
+    "distance_to_downtown_miles": 4.9,
+    "available_from": "2026-07-01",
+    "available_to": "2026-12-31",
+    "refundable": true,
+    "amenities": [
+      "wifi",
+      "spa",
+      "ocean view"
+    ],
+    "preferred_supplier": false,
+    "policy_hint": "Above Tier 2 cap."
+  },
+  {
+    "id": "htl-2009",
+    "name": "Fabrikam Financial District",
+    "city": "San Francisco",
+    "city_tier": 1,
+    "nightly_rate_usd": 318,
+    "distance_to_downtown_miles": 0.6,
+    "available_from": "2026-07-01",
+    "available_to": "2026-12-31",
+    "refundable": true,
+    "amenities": [
+      "wifi",
+      "breakfast"
+    ],
+    "preferred_supplier": true,
+    "policy_hint": "Within Tier 1 cap."
+  },
+  {
+    "id": "htl-2010",
+    "name": "Union Square Premier",
+    "city": "San Francisco",
+    "city_tier": 1,
+    "nightly_rate_usd": 356,
+    "distance_to_downtown_miles": 0.9,
+    "available_from": "2026-07-01",
+    "available_to": "2026-12-31",
+    "refundable": true,
+    "amenities": [
+      "wifi",
+      "gym"
+    ],
+    "preferred_supplier": false,
+    "policy_hint": "Above Tier 1 cap."
+  },
+  {
+    "id": "htl-2011",
+    "name": "Northwind London City",
+    "city": "London",
+    "city_tier": 1,
+    "nightly_rate_usd": 309,
+    "distance_to_downtown_miles": 1.4,
+    "available_from": "2026-07-01",
+    "available_to": "2026-12-31",
+    "refundable": true,
+    "amenities": [
+      "wifi",
+      "breakfast"
+    ],
+    "preferred_supplier": true,
+    "policy_hint": "Compliant London option."
+  },
+  {
+    "id": "htl-2012",
+    "name": "Maple Leaf Toronto Downtown",
+    "city": "Toronto",
+    "city_tier": 2,
+    "nightly_rate_usd": 232,
+    "distance_to_downtown_miles": 0.8,
+    "available_from": "2026-07-01",
+    "available_to": "2026-12-31",
+    "refundable": true,
+    "amenities": [
+      "wifi",
+      "gym"
+    ],
+    "preferred_supplier": true,
+    "policy_hint": "Compliant Toronto option."
+  }
+]
