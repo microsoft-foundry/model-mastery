@@ -1,0 +1,4 @@
+.env*
+.trailmate-state.json
+__pycache__/
+.venv/

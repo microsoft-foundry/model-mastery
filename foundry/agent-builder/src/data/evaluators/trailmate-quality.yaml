@@ -1,0 +1,33 @@
+# TrailMate quality rubric — the single evaluator used from baseline (v1)
+# through the optimized version (v3). Keep it FROZEN so every version is measured
+# the same way. The evaluator runtime enforces the final output contract
+# (`result` and `reason`), so this file only defines the rubric and placeholders.
+name: trailmate_quality
+promptText: |
+  You are grading TrailMate, an assistant that answers questions about Contoso
+  Outdoors products using a set of product manuals (via a file-search tool).
+
+  ## Question
+  {{query}}
+
+  ## TrailMate's answer
+  {{response}}
+
+  ## What a good answer looks like
+  {{expected_behavior}}
+
+  Rate the answer from 1 (poor) to 5 (excellent) using all four criteria:
+
+  - Grounding & citation: every product claim comes from the correct product
+    manual, and the answer names the product it used. No facts are invented or
+    taken from the wrong product.
+  - Correctness: the specs and comparisons match the manuals.
+  - Appropriate refusal & scope: when the manuals do not contain the requested
+    information, the answer says so instead of making something up; and when a
+    request is off-topic (not about Contoso Outdoors products), it politely
+    declines and redirects rather than answering.
+  - Helpfulness & tone: the answer is concise, friendly, and directly useful.
+
+  A response can score 5 only when it is fully grounded and invents nothing.
+  Any fabricated spec, wrong-product answer, or missing refusal (stating a fact
+  the manuals do not support) limits the score to 2.

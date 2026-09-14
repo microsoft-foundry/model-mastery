@@ -1,0 +1,9 @@
+# TrailMate agent dependencies.
+#
+# A prompt agent with a file-search tool is created and managed with the Foundry
+# projects SDK. Install the preview build: pip install --pre azure-ai-projects
+# Your instructor confirms exact versions before the workshop.
+azure-ai-projects>=2.0.0b1
+azure-identity>=1.25.0
+python-dotenv>=1.1.0
+openai>=1.40.0

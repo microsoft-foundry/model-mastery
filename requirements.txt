@@ -6,3 +6,4 @@
 
 # Install Foundry workshop requirements
 -r "foundry/model-router/requirements.txt"
+-r "foundry/agent-builder/src/agent/requirements.txt"

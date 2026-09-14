@@ -2,7 +2,14 @@
   <img src="./src/assets/workshop-banner.svg" alt="From Model Selection to Agent Optimization: a visual hill-climbing journey" width="100%">
 </p>
 
-# From Model Selection to Agent Optimization with Microsoft Foundry
+# From Model Selection To Agent Optimization
+
+> This is a Model Mastery workshop for a beginner-level audience (L100-200). Learn how to build and optimize a product launch agent by right-sizing the model for the task, then optimizing the agent using a simple hill-climbing analogy.
+
+## Session Abstract
+
+Building reliable AI agents in this fast-moving landscape requests observability and continuous optimization. In this 90-minute workshop, we'll take you on a hill climbing journey from model selection to agent optimization using Microsoft Foundry. Start by understanding model capabilities for various tasks independently. Then create an agent and walk through the Agent DevOps loop to understand observability features. Finally, we'll explore hill climbing in action using two levers - model router and agent optimizer - and understand how to build more effective agents with Microsoft Foundry models.
+
 
 **Let’s build, measure, and improve a product-launch agent together in 90 minutes.**
 
