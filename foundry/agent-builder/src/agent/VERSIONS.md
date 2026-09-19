@@ -12,7 +12,7 @@ manuals are never re-uploaded.
 
 | Version | Name | Lever changed | Model | Instructions | Tool | How to reproduce |
 |---|---|---|---|---|---|---|
-| **v1** | Basecamp | starting point | `gpt-5-4` (frontier) | `instructions.md` (under-specified) | file-search over the manuals | `python build_agent.py` |
+| **v1** | Basecamp | starting point | `gpt-5.4` (frontier) | `instructions.md` (under-specified) | file-search over the manuals | `python build_agent.py` |
 | **v2** | Trailfinder | **model** → router | `model-router` | same as v1 | same file-search / same vector store | `python switch_to_router.py` |
 | **v3** | Summit | **instructions** → optimized | `model-router` | optimizer output (reference: `instructions_optimized.md`) | same file-search / same vector store | Agent Optimizer in the portal (Step 7), or apply `instructions_optimized.md` as a new version |
 

@@ -6,6 +6,11 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
+echo "==> Installing system tools (ripgrep)"
+if ! command -v rg >/dev/null 2>&1; then
+  sudo apt-get update && sudo apt-get install -y ripgrep || echo "ripgrep install skipped"
+fi
+
 echo "==> Upgrading pip"
 python -m pip install --upgrade pip
 
@@ -15,6 +20,9 @@ if [[ -f requirements.txt ]]; then
 else
   echo "==> No root requirements.txt found; skipping Python package install"
 fi
+
+echo "==> Verifying notebook kernel (ipykernel)"
+python -c "import ipykernel; print('ipykernel', ipykernel.__version__)" || echo "ipykernel not available"
 
 echo "==> Tool versions"
 python --version || true

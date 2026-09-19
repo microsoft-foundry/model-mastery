@@ -49,6 +49,68 @@ thing**:
 | **v2 · Trailfinder** | Model → Model Router | Cut cost/latency without losing quality? |
 | **v3 · Summit** | Instructions → optimized (Agent Optimizer) | Improve grounding and honesty |
 
+## Learning objectives
+
+By the end of the core workshop you'll be able to:
+
+- **Right-size a model** for a task by capability, cost, latency, and quality.
+- **Build a grounded prompt agent** with a file-search tool over your own documents.
+- **Observe agent behavior** with traces and run metrics (AgentOps).
+- **Measure a baseline** with a rubric evaluator.
+- **"Hill climb"** — improve one lever at a time (Model Router, then Agent
+  Optimizer) and promote the version the evidence supports.
+
+## Prerequisites
+
+- A **personal GitHub account** (for Codespaces — a work/enterprise account won't work).
+- A modern web browser.
+- **Azure access to Microsoft Foundry:**
+  - *Instructor-led (Skillable):* provided for you — nothing to install.
+  - *Self-guided:* your own subscription with Foundry access.
+- The dev container sets up Python 3.13, Azure CLI, `azd`, and every notebook
+  package for you.
+
+Models used (Skillable pre-provisions all of them; the self-guided
+[`provision.sh`](scripts/provision.sh) deploys the Azure-direct ones and prompts
+for Claude):
+
+| Deployment | Role |
+|---|---|
+| `gpt-5.4` | Frontier reasoning; TrailMate v1 model |
+| `gpt-5.4-mini` | Fast/cheap contrast in model selection |
+| `model-router` | TrailMate v2 model lever |
+| `MAI-Image-2.5-Pro` | Image task in model selection |
+| `claude-sonnet-4-6`, `claude-haiku-4-5` | Optional GPT-vs-Claude comparison |
+
+## Choose your track
+
+Setup differs by track; the labs are identical.
+
+- **Instructor-led (Skillable)** → **[instructions/skillable/README.md](instructions/skillable/README.md)** — infra is pre-provisioned; you generate `.env` and go. **Start here for the workshop.**
+- **Self-guided (bring your own Azure)** — provisions infra with
+  [`scripts/provision.sh`](scripts/provision.sh). Being finalized; follow the
+  Skillable steps as reference for now.
+
+## What you'll do
+
+After setup, open the **core** notebooks in order:
+
+| # | Lab | Time | Notebook |
+|---|-----|------|----------|
+| 00 | Validate setup | 15 min | [labs/core/00-validate-setup.ipynb](labs/core/00-validate-setup.ipynb) |
+| 01 | Select the right model | 30 min | [labs/core/01-model-selection.ipynb](labs/core/01-model-selection.ipynb) |
+| 02 | Build, evaluate & optimize the agent | 45 min | [labs/core/02-agent-optimization.ipynb](labs/core/02-agent-optimization.ipynb) |
+
+Have time left? The optional **`labs/more/`** notebooks go deeper on specific capabilities — pick any that interest you, in any order:
+
+| # | Lab | Time | Notebook |
+|---|-----|------|----------|
+| 01 | Multimodal chat | 20 min | [labs/more/01-chat-multimodal.ipynb](labs/more/01-chat-multimodal.ipynb) |
+| 02 | Reasoning models | 20 min | [labs/more/02-reasoning-models.ipynb](labs/more/02-reasoning-models.ipynb) |
+| 03 | Image generation | 20 min | [labs/more/03-image-generation.ipynb](labs/more/03-image-generation.ipynb) |
+| 04 | Model Router | 20 min | [labs/more/04-model-router.ipynb](labs/more/04-model-router.ipynb) |
+| 05 | Code with Claude | 20 min | [labs/more/05-code-with-claude.ipynb](labs/more/05-code-with-claude.ipynb) |
+
 ## Repository layout
 
 ```text
@@ -56,63 +118,26 @@ foundry/agent-builder/
 ├── README.md                      you are here
 ├── assets/                        banner, product images, attribution
 ├── instructions/
-│   ├── self-guided/               the workshop steps (start here)
-│   └── skillable/                 Windows lab version (coming soon)
-├── scripts/
-│   ├── provision.sh               Azure CLI: resource, project, RBAC, models, tracing
-│   ├── setenv.sh                  (re)generate src/.env from an existing resource group
-│   └── sample.env                 optional provisioning overrides
+│   └── skillable/                 Skillable setup (self-guided coming)
+├── labs/
+│   ├── core/                      the 90-minute workshop — run in order
+│   │   ├── 00-validate-setup.ipynb
+│   │   ├── 01-model-selection.ipynb
+│   │   ├── 02-agent-optimization.ipynb
+│   │   └── assets/                screenshots for the core labs
+│   └── more/                      optional extra labs
+│       ├── 01-chat-multimodal.ipynb
+│       ├── 02-reasoning-models.ipynb
+│       ├── 03-image-generation.ipynb
+│       ├── 04-model-router.ipynb
+│       ├── 05-code-with-claude.ipynb
+│       └── assets/                screenshots for the more labs
+├── scripts/                       provision.sh · setenv.sh · sample.env
 └── src/
-    ├── data/
-    │   ├── manuals/               10 Contoso product manuals (grounding)
-    │   ├── evaluation-cases.jsonl the frozen test set
-    │   └── evaluators/            the frozen quality rubric
-    └── agent/
-        ├── build_agent.py         v1: vector store + upload + prompt agent
-        ├── switch_to_router.py    v2: new version on Model Router
-        ├── instructions.md        v1 instructions (simple on purpose)
-        ├── instructions_optimized.md  v3 reference instructions
-        ├── VERSIONS.md            documented v1/v2/v3 changes
-        └── requirements.txt
+    ├── data/                      manuals · evaluation-cases.jsonl · evaluators/
+    └── agent/                     build_agent.py · switch_to_router.py · instructions · VERSIONS.md
 ```
 
-## Prerequisites
-
-- An Azure subscription with access to Microsoft Foundry
-- GitHub Codespaces or a dev container (Python 3.13 is set up for you)
-- Azure CLI (`az`) for signing in and provisioning
-
-Models used (the [`provision.sh`](scripts/provision.sh) script deploys the
-Azure-direct ones; Claude is optional and prompted):
-
-| Deployment | Role |
-|---|---|
-| `gpt-5-4` | Frontier reasoning; TrailMate v1 model |
-| `gpt-5-4-mini` | Fast/cheap contrast in model selection |
-| `model-router` | TrailMate v2 model lever |
-| `mai-image-2-6` | Image task in model selection |
-| `claude-sonnet-4-6`, `claude-haiku-4-5` | Optional GPT-vs-Claude comparison |
-
-Model names, versions, and quota vary by region — your instructor confirms them
-before the workshop.
-
-## Workshop outline
-
-Start with **[0 · Getting started](instructions/self-guided/00-getting-started.md)**,
-then work through the steps in order. Each opens with a developer question the
-step answers.
-
-| # | Step | Where | Time |
-|---|------|-------|------|
-| 0 | [Getting started](instructions/self-guided/00-getting-started.md) | VS Code | before you start |
-| 1 | [Set up and validate](instructions/self-guided/01-setup-and-validate.md) | VS Code + Portal | 15 min |
-| 2 | [Select the right model for the task](instructions/self-guided/02-model-selection.md) | Portal | 30 min |
-| 3 | [Build TrailMate](instructions/self-guided/03-build-trailmate.md) | VS Code | 10 min |
-| 4 | [Test and observe](instructions/self-guided/04-test-and-observe.md) | Portal | 6 min |
-| 5 | [Measure a baseline](instructions/self-guided/05-baseline-eval.md) | Portal | 8 min |
-| 6 | [Improve the model with Model Router](instructions/self-guided/06-model-router.md) | VS Code + Portal | 8 min |
-| 7 | [Improve the agent with Agent Optimizer](instructions/self-guided/07-agent-optimizer.md) | Portal | 8 min |
-| 8 | [Compare and promote](instructions/self-guided/08-compare-and-promote.md) | Portal | 5 min |
 
 ## Related resources
 

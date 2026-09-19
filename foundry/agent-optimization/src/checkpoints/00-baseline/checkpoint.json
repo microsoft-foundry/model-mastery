@@ -1,9 +1,0 @@
-{
-  "schema_version": "1.0",
-  "kind": "prepared-workshop-checkpoint",
-  "id": "baseline",
-  "source": "instructor-authored",
-  "remote_operation_id": null,
-  "measured_scores": null,
-  "purpose": "Offline baseline used when a live optimizer job cannot finish during the workshop."
-}

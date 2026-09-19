@@ -1,8 +1,0 @@
-azure-ai-agentserver-core
-azure-ai-agentserver-agentframework
-azure-ai-agentserver-optimization
-azure-ai-projects>=2.0.0
-azure-identity>=1.25.0
-azure-monitor-opentelemetry>=1.8.0
-python-dotenv>=1.1.0
-PyYAML>=6.0

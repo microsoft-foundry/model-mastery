@@ -144,10 +144,11 @@ deploy_model() {
 }
 
 echo "==> Deploying the Azure-direct models (GPT, Router, Image)"
-deploy_model "gpt-5-4"           "gpt-5.4"           "$SKU_CAPACITY"
-deploy_model "gpt-5-4-mini"      "gpt-5.4-mini"      "$SKU_CAPACITY"
-deploy_model "model-router"      "model-router"      "$SKU_CAPACITY"
-deploy_model "mai-image-2-6"     "MAI-Image-2.6"     1
+# Deployment names match what the notebooks expect (and the Skillable lab).
+deploy_model "gpt-5.4"            "gpt-5.4"            "$SKU_CAPACITY"
+deploy_model "gpt-5.4-mini"       "gpt-5.4-mini"       "$SKU_CAPACITY"
+deploy_model "model-router"       "model-router"       "$SKU_CAPACITY"
+deploy_model "MAI-Image-2.5-Pro"  "MAI-Image-2.5-Pro"  1
 
 echo
 read -r -p "Also deploy Claude (Sonnet + Haiku) for the GPT-vs-Claude comparison? [y/N] " claude

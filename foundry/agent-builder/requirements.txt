@@ -1,0 +1,24 @@
+# Notebook dependencies for the TrailMate labs (labs/core + labs/more).
+# Wired into the repo-root requirements.txt so Codespaces installs them on create.
+
+# Foundry SDK — the evaluators generation-job API used in labs/core/02
+# (project_client.beta.evaluators.begin_create_generation_job) needs >= 2.4.0;
+# 2.6.x is verified. Pinned explicitly here so Codespaces resolves the new API
+# even though another workshop in this repo caps azure-ai-projects lower.
+azure-ai-projects>=2.6.0
+
+# Agent build/runtime deps (shared with the src/agent scripts).
+# Evaluation for the NEW Foundry portal rides on azure-ai-projects (rubric
+# evaluators via project_client.beta.evaluators) — NOT the classic
+# azure-ai-evaluation SDK.
+-r src/agent/requirements.txt
+
+# Notebook execution (kernel for the Jupyter/VS Code notebooks)
+ipykernel>=6.29.0
+
+# Data display / comparison tables
+pandas>=2.2.0
+
+# Image lab (labs/more/03-image-generation): decode + show generated images
+pillow>=10.4.0
+requests>=2.32.0

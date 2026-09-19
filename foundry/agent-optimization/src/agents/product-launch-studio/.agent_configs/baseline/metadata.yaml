@@ -1,4 +1,0 @@
-# Replace this with an existing deployment before running Agent Optimizer.
-model: copywriter-fixed
-temperature: 0.4
-instruction_file: instructions.md
