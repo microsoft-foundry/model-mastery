@@ -1,0 +1,5 @@
+agent-framework-core>=1.17.0,<1.18   # 1.18 breaks MCP tool headers
+agent-framework-anthropic>=1.0.0b260910
+mcp>=1.24.0,<2
+anthropic
+python-dotenv

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sparkles Kiosk</title>
+<style>
+  body { font-family: system-ui, sans-serif; background: #fff4f8; color: #3b2a35; margin: 0; padding: 2rem; }
+  h1 { color: #d6336c; }
+  .card { background: #fff; border-radius: 12px; padding: 1.5rem; max-width: 520px; box-shadow: 0 4px 14px rgba(0,0,0,.08); }
+  li { padding: .4rem 0; font-size: 1.1rem; }
+  button { background: #d6336c; color: #fff; border: 0; padding: .7rem 1.2rem; border-radius: 8px; font-size: 1rem; cursor: pointer; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1 data-testid="title">Sparkles Cupcakes</h1>
+    <p data-testid="special">Special of the day: Salted Caramel</p>
+    <h2>Today's flavors</h2>
+    <!-- BUG: only one flavor made it into the list -->
+    <ul data-testid="flavor-list">
+      <li>Vanilla Bean</li>
+    </ul>
+    <!-- BUG: the order counter element was never added -->
+    <button data-testid="order-btn" onclick="order()">Place order</button>
+  </div>
+  <script>
+    let count = 0;
+    function order() {
+      count += 1;
+      const el = document.querySelector('[data-testid="order-count"]');
+      if (el) el.textContent = count;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+# 12.1.0b2 or later: the knowledge base's reasoning effort and output mode are
+# only settable in the 12.1 betas. The stable 12.0.0 has no such fields and
+# always retrieves minimal/extractive; older betas keep the classes elsewhere.
+azure-search-documents>=12.1.0b2
+azure-identity
+python-dotenv

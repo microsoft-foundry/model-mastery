@@ -1,0 +1,7 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+sparkles-loop/workspace/*.html
+sparkles-loop/workspace/*.png
+.DS_Store
