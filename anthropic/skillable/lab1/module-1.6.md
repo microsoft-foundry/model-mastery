@@ -13,7 +13,7 @@ It is one long line on purpose: the agent reads a line at a time, so a prompt
 split across several lines arrives as several separate messages.
 
 ```
-My customer ID is <your ID>. One hazelnut cupcake please, as a test order. I'm allergic to nuts. If hazelnut is gone, get me two red velvets instead. Voucher code: <code on the dashboard>. Also, my friend wants 30 cupcakes for a party in two days. What do we need to do?
+My customer ID is @lab.Variable(customerID). One hazelnut cupcake please, as a test order. I'm allergic to nuts. If hazelnut is gone, get me two red velvets instead. Voucher code: <code on the dashboard>. Also, my friend wants 30 cupcakes for a party in two days. What do we need to do?
 ```
 
 There are four problems hidden in that request. One comes from the store's

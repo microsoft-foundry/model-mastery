@@ -195,8 +195,9 @@ from the server, not from your repo.
 
 Now order a cupcake. Answer its questions, pick a flavor, and place the order.
 
-> **Write down your customer ID.** Sparkles gives you an eight-character ID
+> **Copy your customer ID** in the field below. Sparkles gives you an eight-character ID
 > like 'ABCD2345' the first time you order. You will need it later.
+    @lab.TextBox(customerID)
 
 Watch your order on the order dashboard: the address in 'CUPCAKE_MCP_URL'
 with '/dashboard' in place of '/mcp/' (in a workshop, it is also on screen in

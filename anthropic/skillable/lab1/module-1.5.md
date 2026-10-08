@@ -39,7 +39,7 @@ nothing to type:
 
 ### Run it
 
-Have two things ready: your customer ID from Module 1.2, and the voucher code
+Have two things ready: your customer ID from Module 1.2 (**@lab.Variable(customerID)**), and the voucher code
 on the order dashboard.
 
 ```

@@ -19,8 +19,12 @@ az login --use-device-code
 ```
 
 The command prints a code and a web address. Open the address in Edge, enter
-the code, and sign in with the same workshop account as in Module 1.0. Then
-come back to the terminal. If it asks you to select a subscription, press
+the code, and sign in with the same workshop account as in Module 1.0:
+
+   **Username**: `@lab.CloudPortalCredential(User1).Username`  
+   **Access Pass**: `@lab.CloudPortalCredential(User1).AccessToken`
+
+Then come back to the terminal. If it asks you to select a subscription, press
 Enter to keep the default.
 
 Check '.env' has 'AZURE_AI_PROJECT_ENDPOINT' and 'EVAL_ENDPOINT_CONNECTION'

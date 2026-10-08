@@ -148,4 +148,6 @@ if __name__ == "__main__":
 
 Run the agent, place an order, then type 'receipt'.
 
+  > Use your customer ID **@lab.Variable(customerID)** when asked.
+
 **Checkpoint 5.** A schema-valid receipt from a real order, on every run.

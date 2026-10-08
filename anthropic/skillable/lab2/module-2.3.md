@@ -72,22 +72,26 @@ the loop has finished and a few minutes have passed.
 #### Step 2: Look at the run as a trace
 
 1. In Edge, open [https://portal.azure.com](https://portal.azure.com). If it
-   asks you to sign in, use the same workshop account as in Module 1.0.
-2. In the search bar at the top of the portal, type 'Application Insights',
+   asks you to sign in, use the same workshop account as in Module 1.0:
+
+   **Username**: `@lab.CloudPortalCredential(User1).Username`  
+   **Access Pass**: `@lab.CloudPortalCredential(User1).AccessToken`
+   
+3. In the search bar at the top of the portal, type 'Application Insights',
    select it, and open the workshop's resource from the list.
-3. In the resource's left menu, open **Investigate > Search**.
-4. Set the time range to **Last 30 minutes**.
-5. Select **View as traces**. Each 'sparkles-session' card is one run of the
+4. In the resource's left menu, open **Investigate > Search**.
+5. Set the time range to **Last 30 minutes**.
+6. Select **View as traces**. Each 'sparkles-session' card is one run of the
    script. Before opening anything, look at the card header: it shows the run's
    duration, the number of spans, and a token badge (for example '12,400t') for
    the whole run. Azure reads the 'gen_ai.usage.*' attributes and totals them
    for you.
-6. Click the header line of the card (the trace ID and 'sparkles-session' name,
+7. Click the header line of the card (the trace ID and 'sparkles-session' name,
    not the "Matching Dependency" box underneath). The end-to-end transaction
    page opens as a timeline: the planner at the top, then each round below it,
    with the generator and evaluator inside and the actual Claude call underneath
    each.
-7. In that timeline, click the **evaluator** bar (not the POST beneath it). The
+8. In that timeline, click the **evaluator** bar (not the POST beneath it). The
    panel on the right lists that span's properties: the model,
    'gen_ai.usage.input_tokens', 'gen_ai.usage.output_tokens', and the
    'sparkles.*' values the loop recorded. If the panel looks short, look for a

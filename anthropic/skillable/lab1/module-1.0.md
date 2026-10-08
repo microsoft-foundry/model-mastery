@@ -4,14 +4,22 @@ No code in this module. You will find Claude in Foundry, talk to it, and
 change how it behaves with a system prompt.
 
 ### Sign in
+1. Sign in to the virtual machine with the following credentials:
+   
+   **Username**: `@lab.VirtualMachine(Windows11).Username`  
+   **Password**: `@lab.VirtualMachine(Windows11).Password`
 
 1. Open **Microsoft Edge** from the Windows taskbar.
-2. Go to [https://ai.azure.com](https://ai.azure.com) and sign in with the
-   workshop account. The sign-in details are on the **Resources** tab.
-3. If the top bar has a **New Foundry** toggle, make sure it is turned on.
-4. From the project listings on the main page, select the pre-created
+2. Go to `https://ai.azure.com` and sign in with the workshop account:
+
+	**Username**: `@lab.CloudPortalCredential(User1).Username`  
+	**Access Pass**: `@lab.CloudPortalCredential(User1).AccessToken`
+   
+	>[!note]The sign-in details are also on the Resources tab.
+4. If the top bar has a **New Foundry** toggle, make sure it is turned on.
+5. From the project listings on the main page, select the pre-created
    project. There should only be one.
-5. If a dialog pops up, select the close or **Skip** button.
+6. If a dialog pops up, select the close or **Skip** button.
 
 ![Foundry home](../images/01-foundry-home.png)
 
