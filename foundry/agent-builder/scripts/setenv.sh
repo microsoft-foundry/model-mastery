@@ -66,9 +66,20 @@ APPINSIGHTS_NAME="$(az resource list --resource-group "$RESOURCE_GROUP" \
   --resource-type "Microsoft.Insights/components" --query "[0].name" -o tsv 2>/dev/null || true)"
 APPINSIGHTS_CONNECTION_STRING=""
 if [[ -n "$APPINSIGHTS_NAME" ]]; then
-  APPINSIGHTS_CONNECTION_STRING="$(az monitor app-insights component show \
-    --app "$APPINSIGHTS_NAME" --resource-group "$RESOURCE_GROUP" \
-    --query connectionString -o tsv 2>/dev/null || true)"
+  APPINSIGHTS_CONNECTION_STRING="$(az resource show \
+    --resource-group "$RESOURCE_GROUP" \
+    --name "$APPINSIGHTS_NAME" \
+    --resource-type "Microsoft.Insights/components" \
+    --query properties.ConnectionString \
+    --output tsv \
+    --only-show-errors 2>/dev/null || true)"
+  # A valid App Insights connection string should begin with InstrumentationKey=.
+  # Reject unexpected CLI output instead of writing a malformed value into .env.
+  if [[ -n "$APPINSIGHTS_CONNECTION_STRING" && \
+        "$APPINSIGHTS_CONNECTION_STRING" != InstrumentationKey=* ]]; then
+    echo "WARNING: Application Insights returned an unexpected connection string; tracing will not be configured." >&2
+    APPINSIGHTS_CONNECTION_STRING=""
+  fi
 fi
 
 # --- Write the single .env used by every lab. ---
