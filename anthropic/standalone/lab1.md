@@ -1,19 +1,26 @@
-# Lab 1: Building an Agent with Claude on Microsoft Foundry
+# Lab 1: Building Agents with Claude on Microsoft Foundry
 
-Welcome to Sparkles, the friendliest little cupcake shop on the internet.
-Sparkles has more customers than staff, so today you will build the agent
-that greets them, takes their orders, answers policy questions from the
-shop's own documents, and reads their handwritten catering requests.
+In this lab, you'll build a customer agent with Claude on Microsoft Foundry, one
+capability at a time. You start with a single prompt in the Foundry playground
+and finish with a Python agent that takes orders, answers questions from the
+shop's own policies, and reads handwritten catering orders.
 
-By the end of this lab you will have:
+The agent is for Sparkles, a small cupcake shop with more customers than staff.
+Each module starts with something the agent can't do yet, then adds what it
+needs: tools for live data, a knowledge base for policies, structured outputs for
+receipts, and vision for handwriting. The last module compares two Claude tiers
+on the same hard order.
 
-- Talked to Claude in the Foundry Playground and changed its behavior with one sentence
-- Built a Python agent on Claude in Foundry
-- Given it tools and a personality from the Cupcake Store MCP server, and ordered a real cupcake
-- Connected the shop's knowledge base in Foundry IQ and watched Claude route between two tool servers
-- Produced a schema-valid receipt with structured outputs
-- Watched Claude read a handwritten order and place it, applying store policy
-- Compared two Claude tiers on the same hard problem
+In this lab, you'll:
+
+- Talk to Claude in the Foundry Playground and change its behavior with one sentence
+- Build a Python agent on Claude in Foundry
+- Give it tools and a personality from the Cupcake Store MCP server, and order a real cupcake
+- Connect the shop's knowledge base in Foundry IQ and watch Claude route between two tool servers
+- Let Claude find the right tool in a catalog of twelve with tool search
+- Produce a schema-valid receipt with structured outputs
+- Watch Claude read a handwritten order and place it, applying store policy
+- Compare two Claude tiers on the same hard problem
 
 **How the lab works.** Every module ends with a checkpoint. Modules 1.4 through
 1.6 are independent, so if you fall behind, skip to the next one. Completed
@@ -21,8 +28,7 @@ code for every module is in `sparkles-agent/snapshots/`; copy the one you
 need over `agent.py` and carry on.
 
 **Your environment.** VS Code with the repo open, a terminal, and the Foundry
-portal in a browser tab. Your settings live in the `.env` file at the top of
-the repo, which you filled in when you worked through [SETUP.md](SETUP.md).
+portal in a browser tab. Your settings live in the `.env` file in the `anthropic` folder, which you filled in when you worked through [SETUP.md](SETUP.md).
 
 **Prerequisites**
 
@@ -33,8 +39,9 @@ the repo, which you filled in when you worked through [SETUP.md](SETUP.md).
 
 ## Module 1.0: Meet your model (10 minutes)
 
-No code in this module. You will find Claude in Foundry, talk to it, and
-change how it behaves with a system prompt.
+We'll start in the Foundry Playground, without code. You'll give Claude a role
+with a system prompt, then see what it can't answer without your shop's real
+information. The rest of this lab works to add information to our agent.
 
 ### Sign in
 
@@ -48,7 +55,7 @@ change how it behaves with a system prompt.
 ### Find the Claude deployment
 
 1. In the left navigation choose **Build**, then **Models**.
-2. Open the **Deployments** tab. You will see a Claude Sonnet deployment
+2. Open the **Deployments** tab. You'll see a Claude Sonnet deployment
    (the name matches `FOUNDRY_MODEL_DEPLOYMENT` in your `.env`) and a Claude
    Haiku deployment.
 
@@ -67,7 +74,7 @@ Click the Sonnet deployment, then **Open in playground**. Find the
 You are the order assistant for Sparkles Cupcakes, a small cupcake shop.
 ```
 
-Then, in the chat box, ask: 'It is my daughter's birthday and she is eight.
+Then, in the chat box, ask: 'It's my kid's birthday and they're eight.
 What should I order?'
 
 One sentence, and you have a shop assistant without having specified examples or formatting rules. 
@@ -75,57 +82,52 @@ In the code you write next, the same field is called `instructions`.
 
 ### Find the edge
 
-You will get back something like this:
+Read the reply. You'll probably get general ideas, like vanilla or chocolate
+with bright frosting, or some questions about the party. Notice what's missing:
+it can't tell you what Sparkles actually sells.
 
-```
-Here are some ideas that are popular with kids her age:
-  Vanilla with pink frosting, Chocolate with rainbow sprinkles, Funfetti
-  Rainbow cupcakes - colorful inside, very magical!
-  Unicorn cupcakes - super popular with 8-year-olds
-  Strawberry with whipped frosting
-```
-
-However, none of these are actual Sparkles flavors! The model invented them.
-
-You told it that it works at a cupcake shop. You did not tell it what the shop
-sells, so it filled that in.
+You told it that it works at a cupcake shop. You didn't tell it what the shop
+sells.
 
 Now ask: 'What's your refund policy?'
 
-You will get a reasonable-sounding policy, and it is invented too. Nothing you
-told it says what Sparkles actually does. That is the real risk: not that the
-model refuses, but that it answers confidently and plausibly with something
-that is not your shop's policy.
+It will most likely tell you it doesn't have that information, and suggest you
+check with the shop. That's the behavior you want: it doesn't make up a policy.
+But it's not much use to your customer yet, and your assistant can't do its job
+with what it knows so far.
+
+Models don't all behave the same way here, so check how yours handles questions
+it can't answer. Never assume an answer is grounded unless you gave it the facts.
 
 Module 1.2 gives it the real menu. Module 1.3 gives it the real policies.
 
 ### Look at the code
 
-Click the **Continue in code** button. This is the same call you will make from Python in the
+Click the **Continue in code** button. This is the same call you'll make from Python in the
 next module. Note the three things it needs: the endpoint, a key, and the
 deployment name.
 
 ![Playground](images/03-playground.png)
 
-**Checkpoint 1.** You have talked to Claude on Foundry, and seen what it does
-and does not know about your shop.
+✅ **Checkpoint 1.** You have talked to Claude on Foundry, and seen what it does
+and doesn't know about your shop.
 
 ---
 
 ## Module 1.1: Hello world agent (10 minutes)
 
-Time to build the agent in Python. The framework you will use wraps a chat
+Time to build the agent in Python. The framework you'll use wraps a chat
 model, a conversation session, and tools into one `Agent` object.
 
 ### Check your settings
 
-Open the `.env` file at the top of the repo in VS Code. It needs three
+Open the `.env` file in the `anthropic` folder in VS Code. It needs three
 values, all from the Playground's **Details** tab:
 
 ```
 FOUNDRY_ENDPOINT="https://<your-resource>.services.ai.azure.com/anthropic"
 FOUNDRY_API_KEY="<key>"
-FOUNDRY_MODEL_DEPLOYMENT="claude-sonnet-5"
+FOUNDRY_MODEL_DEPLOYMENT="claude-sonnet-5-5"
 ```
 
 You filled these in during [SETUP.md](SETUP.md) step 2. One thing to watch: the portal
@@ -170,20 +172,20 @@ python agent.py
 
 Type `Hello!` and you should get a friendly reply. Type `exit` to stop.
 
-**Checkpoint 2.** A terminal conversation with your own agent.
+✅ **Checkpoint 2.** A terminal conversation with your own agent.
 
 If it fails: a `401` means the key or endpoint is wrong; `DeploymentNotFound`
-means the deployment name does not match the portal exactly.
+means the deployment name doesn't match the portal exactly.
 
 ---
 
 ## Module 1.2: Tools and a personality (15 minutes)
 
-An agent that only chats cannot take an order. To check stock and place
+An agent that only chats can't take an order. To check stock and place
 orders it needs **tools**, and to sound like Sparkles it needs a persona.
 Both come from the Cupcake Store **MCP server**.
 
-> **What is MCP?** The Model Context Protocol is an open standard for
+> **What's MCP?** The Model Context Protocol is an open standard for
 > connecting agents to external systems. An MCP server publishes tools
 > (functions), prompts (reusable instructions), and resources over HTTP. Your
 > agent only needs the URL; the framework discovers everything else.
@@ -268,13 +270,13 @@ python agent.py
 Ask: 'What flavors do you have today?' The agent decides on its own to call
 the store's tools, and answers from live stock.
 
-**Do not order a cupcake yet.** This step is only to prove the tools work.
+**Don't order a cupcake yet.** This step is only to prove the tools work.
 Notice the voice: it has the shop's tools, but it still sounds like a generic
-assistant. Type `exit` when you are done.
+assistant. Type `exit` when you're done.
 
 ### Step B: give it a personality
 
-The shop has opinions about how its agent should behave, and it does not want
+The shop has opinions about how its agent should behave, and it doesn't want
 every developer pasting the latest persona into their code. So the persona
 lives on the **server**, not in your repo.
 
@@ -376,36 +378,36 @@ from the server, not from your repo.
 Now order a cupcake. Answer its questions, pick a flavor, and place the order.
 
 > **Write down your customer ID.** Sparkles gives you an eight-character ID
-> like `ABCD2345` the first time you order. You will need it later.
+> like `ABCD2345` the first time you order. You'll need it later.
 
 Watch it arrive on the order dashboard: the address in `CUPCAKE_MCP_URL` with
-`/dashboard` in place of `/mcp/`. When your order shows **ready**, it is done.
+`/dashboard` in place of `/mcp/`. When your order shows **ready**, it's done.
 
 ![Order dashboard](images/05-dashboard.png)
 
-**Checkpoint 3.** An end-to-end order through your own agent, and a real
+✅ **Checkpoint 3.** An end-to-end order through your own agent, and a real
 cupcake.
 
 ---
 
-## Module 1.3: Give it knowledge with Foundry IQ (10 minutes)
+## Module 1.3: Give it knowledge with Foundry IQ (15 minutes)
 
 ### Find the gap
 
 Run your agent and ask two questions:
 
 1. 'What flavors do you have today?' It answers, calling the store's tools.
-2. 'Do you bake with tree nuts?' It cannot, and says so.
+2. 'Do you bake with tree nuts?' It can't, and says so.
 
 Same agent, same session. One question served, one not. It has tools; they
-just do not cover policy. The shop's policies live in a document, and this
+just don't cover policy. The shop's policies live in a document, and this
 module gives the agent that document through **Foundry IQ**.
 
-> **What is Foundry IQ?** The managed knowledge layer in Microsoft Foundry,
+> **What's Foundry IQ?** The managed knowledge layer in Microsoft Foundry,
 > built on Azure AI Search. In [SETUP.md](SETUP.md) you loaded the Sparkles store
 > information (hours, delivery, returns, allergens, loyalty, bulk-order rules)
 > into a knowledge base. Every Foundry IQ knowledge base exposes an **MCP
-> endpoint**, so to your agent it is just another tool server, the same kind
+> endpoint**, so to your agent it's just another tool server, the same kind
 > you connected in Module 1.2.
 
 ### Add the knowledge base
@@ -523,14 +525,38 @@ Run `python agent.py` and ask, in this order:
 3. 'My order arrived squashed. What can I do?'
 4. 'I need 30 cupcakes for a party on Saturday. Anything I should know?'
 
-Question 1 is the one it could not answer a few minutes ago. Questions 1, 3,
+Question 1 is the one it couldn't answer a few minutes ago. Questions 1, 3,
 and 4 go to the knowledge base; question 2 goes to the store.
 Nothing in your code routes them. Claude reads the two tools' descriptions
 and decides per question. Question 4 should turn up the bulk-order rules
 (72 hours notice, 50 percent deposit); remember that for Module 1.6.
 
-**Checkpoint 4.** Your agent answers policy questions from the shop's own
-document, and picks the right server without being told.
+### A bigger toolbox: tool search
+
+Your agent now chooses between two tool servers. A real shop ends up with
+dozens of tools, and sending every one with every request costs context and
+gives the model more wrong options to pick from. With **tool search**, the
+tools are held back and Claude searches for the ones it needs.
+
+Type `exit` to stop the agent. **Open `toolsearch.py`** and look at
+**`CATALOG`**: twelve tools, each with a name and a one-line description.
+
+- **`defer_loading`** keeps all twelve out of Claude's context, so it doesn't
+  read every tool for every question.
+- Claude starts with only the search tool and loads just what the question
+  needs.
+
+```
+python toolsearch.py "How many loyalty points does Priya have?"
+```
+
+Output shows three lines: what Claude searched for, which tools the search
+returned, and which one it called. Try a different question, for example
+'Is the shop open on Sunday?', and see it pick a different tool.
+
+✅ **Checkpoint 4.** Your agent answers policy questions from the shop's own
+document, picks the right server without being told, and finds the right
+tool out of twelve without holding them all in context.
 
 > Where this goes in real life: swap the store document for your product
 > docs, your support runbook, or your contracts, and the agent pattern is
@@ -552,7 +578,7 @@ items (flavor and quantity), total in cents, pickup time. Two things to
 notice:
 
 - The call passes the schema in `output_config`:
-- The answer is not always the first content block. Claude may return a
+- The answer isn't always the first content block. Claude may return a
   thinking block first, so `first_text()` picks the first block of type
   `text` rather than reaching for `content[0]`.
 
@@ -689,7 +715,7 @@ You can also just replace the file contents with everything in the box.
 
 Run the agent, place an order, then type `receipt`.
 
-**Checkpoint 5.** A schema-valid receipt from a real order, on every run.
+✅ **Checkpoint 5.** A schema-valid receipt from a real order, on every run.
 
 ---
 
@@ -697,12 +723,12 @@ Run the agent, place an order, then type `receipt`.
 
 A catering order just arrived as a photo of a handwritten note. One item is
 crossed out with a replacement scribbled next to it, quantities are tally
-marks, and there is an allergy note in the margin. Nothing on it is
+marks, and there's an allergy note in the margin. Nothing on it is
 machine-readable. This module shows what Claude does with it.
 
 ### Write the order
 
-You are making the note yourself. Write it by hand on paper, photograph it
+You're making the note yourself. Write it by hand on paper, photograph it
 slightly askew in normal light, and save it as
 `sparkles-agent/images/catering-order.jpg`.
 
@@ -715,7 +741,7 @@ It needs all of these, because the agent is checked on each one:
 - An allergy note in the margin. 'NO NUTS!!' works well
 - One line with a quantity of 25 or more, so the bulk-order policy applies
 
-Read it back yourself before you run anything. You will be checking that
+Read it back yourself before you run anything. You'll be checking that
 Claude honors the correction and the allergy note.
 
 > **Short on time?** A note already ships with the repo at
@@ -726,7 +752,7 @@ Claude honors the correction and the allergy note.
 
 ### How the script works
 
-Open `sparkles-agent/catering.py`. It chains everything you have built so
+Open `sparkles-agent/catering.py`. It chains everything you've built so
 far, plus vision:
 
 1. **Vision + structured outputs.** The photo goes to Claude as an image
@@ -773,7 +799,7 @@ Check the output against the photo:
   50 percent deposit for 25 or more)?
 - Does the receipt list every item on the photo?
 
-**Checkpoint 6.** The photo read correctly, the shop's own policy applied,
+✅ **Checkpoint 6.** The photo read correctly, the shop's own policy applied,
 one safe test order placed, and a receipt for the whole catering order. No
 parser could have read the note.
 
@@ -781,13 +807,13 @@ parser could have read the note.
 
 ## Module 1.6: Model judgment and tiering (10 minutes)
 
-No new code. This module is about what the model does when an order does not
+No new code. This module is about what the model does when an order doesn't
 add up.
 
 ### The hard order
 
 Run your agent (`python agent.py`). Fill in your customer ID from Module 1.2
-and the voucher code on the order dashboard, then paste this. It is one long
+and the voucher code on the order dashboard, then paste this. It's one long
 line on purpose: the agent reads a line at a time, so a prompt split across
 several lines arrives as several separate messages.
 
@@ -798,71 +824,68 @@ My customer ID is <your ID>. One hazelnut cupcake please, as a test order. I'm a
 There are four problems hidden in that request. One comes from the store's
 live data, three from the shop's policy document:
 
-- Hazelnut is sold out, so it is not on the menu.
+- Hazelnut is sold out, so it isn't on the menu.
 - Hazelnut would be unsafe for a nut allergy even if it were in stock.
 - Thirty cupcakes is a bulk order: the knowledge base says 72 hours notice
   and a 50 percent deposit.
-- Two days is 48 hours, which does not meet the 72 hour requirement.
+- Two days is 48 hours, which doesn't meet the 72 hour requirement.
 
 Watch what Claude does. It should check the menu, catch as many of the four
 as it can, and look up the catering rules instead of assuming them.
 
-One more thing to watch, which is not a problem to catch: the order says to
+One more thing to watch, which isn't a problem to catch: the order says to
 substitute red velvet if hazelnut is gone. Does it apply that fallback, or stop
-and ask first? Either is defensible. What you are looking for is whether it
-noticed the instruction at all. Type `exit` when you are done.
+and ask first? Either is defensible. What you're looking for is whether it
+noticed the instruction at all. Type `exit` when you're done.
 
 ### Same code, different tier
 
-Now run the same order on Claude Haiku, the fast and inexpensive tier, and
+Now run the same order on Claude Haiku, the fast tier, and
 see how much of it the smaller tier handles. No code changes; only the
 deployment name:
 
 ```
-FOUNDRY_MODEL_DEPLOYMENT=claude-haiku-4-5 python agent.py
+FOUNDRY_MODEL_DEPLOYMENT=claude-haiku-5-5 python agent.py
 ```
 
 (On Windows PowerShell:
-`$env:FOUNDRY_MODEL_DEPLOYMENT="claude-haiku-4-5"; python agent.py; Remove-Item Env:FOUNDRY_MODEL_DEPLOYMENT`.
+`$env:FOUNDRY_MODEL_DEPLOYMENT="claude-haiku-5-5"; python agent.py; Remove-Item Env:FOUNDRY_MODEL_DEPLOYMENT`.
 The last part clears the setting once the agent exits, so later runs go back
 to Sonnet.)
 
 Paste the same order, with the new voucher code from the dashboard. Type
-`exit` when you are done.
+`exit` when you're done.
 
 ### Compare the two
 
-Put the two replies side by side and work through these:
+Put the two replies side by side:
 
-1. Which reply felt faster?
-2. How many of the four problems did each tier catch? If one was missed,
-   which?
-3. Does each reply quote the catering rules (72 hours notice, 50 percent
-   deposit)? If it does, it looked them up instead of assuming.
-4. When hazelnut was unavailable, did each tier substitute red velvet or ask
-   first?
-5. Compare with a neighbor who ran the same tier. Did you get the same answer?
-6. Which requests in your own product are like this order, and which are
-   closer to 'What flavors do you have today?'
+1. **Speed:** How long did each reply take? Would a customer notice?
+2. **Accuracy:** Did either one miss or get wrong any of the four problems?
+3. **Judgment:** Did each one substitute red velvet or ask first? With a nut
+   allergy in the order, which would you want?
 
-Do not be surprised if Haiku handles this order as well as Sonnet. That is the
-point of trying it. You built the agent and got it working on the more capable
-tier first. Once it works, check whether a smaller tier holds up on the same
-requests. Where it does, you get the same result faster and for less.
+Don't be surprised if Haiku handles this order as well as Sonnet. This is a
+small, well-defined task with the rules written down, and that's where a smaller
+tier can shine. It doesn't mean a smaller tier is right for everything, and this
+lab uses Sonnet and Haiku to keep things quick. Most workloads start with Claude
+Opus. Whichever model you start with, test it on your own prompts and data before
+you change it. [Choosing the right model](https://platform.claude.com/docs/en/about-claude/models/choosing-a-model)
+walks through how.
 
 > Foundry hosts several Claude tiers behind the same API. Moving a workload
 > from Sonnet to Haiku, or back, is a one-line change: the deployment name.
-> That is exactly what you just did.
+> That's exactly what you just did.
 
-**Checkpoint 7.** The same order run on two Claude tiers, and the two replies
+✅ **Checkpoint 7.** The same order run on two Claude tiers, and the two replies
 compared.
 
-### Wrap up
+### 🎉 Lab 1 Wrap Up
 
 You built a Claude agent on Foundry, gave it tools, a persona, and the shop's
 own knowledge, made its output schema-safe, had it read handwriting and apply
-policy, and compared tiers. After lunch, Lab 2 takes the next step: an agent
-that verifies its own work, and the Foundry features that let you run it
-unattended.
+policy, and compared tiers. Lab 2 takes the next step: an agent
+that verifies its own work, and the Foundry features that let it do more on
+its own while you stay in charge of the result.
 
 

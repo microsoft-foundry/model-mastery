@@ -10,6 +10,9 @@ project only ever sees it as a URL in `CUPCAKE_MCP_URL`.
 
 Budget 20-30 minutes; most of that is provisioning and build time.
 
+The commands here are written for bash, so they run as they are on a Mac, on
+Linux, and in a Codespace. On Windows, run them in a Codespace.
+
 ---
 
 ## Stage 0 — Prerequisites
@@ -42,7 +45,7 @@ Check progress with `az provider show -n Microsoft.Storage --query registrationS
 
 | Thing | Rule | Example |
 |---|---|---|
-| Region | Near the attendees | `uksouth` / `japaneast` |
+| Region | Near the attendees. Any region with Container Apps works for this server | `uksouth` / `japaneast` |
 | Resource group | Any | `rg-cupcake-mcp` |
 | ACR | **Globally unique, alphanumeric only, no hyphens** | `crcupcake01` |
 | Storage account | **Globally unique, lowercase alphanumeric, 3–24 chars** | `stcupcake01` |
@@ -50,6 +53,10 @@ Check progress with `az provider show -n Microsoft.Storage --query registrationS
 | Container app | Any | `ca-cupcake-mcp` |
 
 Name conflicts on the two globally-unique ones are the usual snag — add digits.
+
+The commands below use `uksouth`. If you picked another region, change it in
+Stages 3, 4 and 6. It does not have to match the region of the Search service
+or the Foundry project: the agent reaches each one by its own address.
 
 ---
 
@@ -152,6 +159,7 @@ az containerapp create \
   --registry-username crcupcake01 \
   --registry-password "$ACR_PASSWORD" \
   --target-port 8000 --ingress external \
+  --min-replicas 1 --max-replicas 1 \
   --secrets storage-conn="$STORAGE_CONN" session-secret="$SESSION_SECRET" \
   --env-vars AZURE_STORAGE_CONNECTION_STRING=secretref:storage-conn \
              SESSION_SECRET=secretref:session-secret \
@@ -160,6 +168,28 @@ az containerapp create \
 
 `SESSION_COOKIE_SECURE=true` is required on HTTPS or the admin login cookie
 won't stick.
+
+**`--min-replicas 1 --max-replicas 1` is required for a workshop.** The server
+keeps each agent's MCP session in memory, in one process. Without the pin,
+Container Apps uses its defaults, 0 to 10 replicas, and both ends break
+sessions:
+
+- **Scale to zero when idle.** The next request starts a fresh replica and
+  every existing session is gone.
+- **Scale out under load.** A full room can start a second replica, and a
+  request routed there does not know the session.
+
+Attendees see `session was terminated` from the agent, part-way through a lab.
+
+**Already deployed without it?** Pin it before the event:
+
+```
+az containerapp update -g rg-cupcake-mcp -n ca-cupcake-mcp \
+  --min-replicas 1 --max-replicas 1
+```
+
+One replica is enough for a room of 30 making light JSON calls. It costs a
+little more while it runs, so turn the app off afterwards (Stage 11).
 
 ---
 
@@ -197,7 +227,7 @@ Skipping 3 or 4 makes Module 1.6 fail in a way that looks like a model problem.
 
 ## Stage 10 — Wire into the lab
 
-In the workshop repo's root `.env`:
+In the `.env` in the workshop's `anthropic` folder:
 
 ```
 CUPCAKE_MCP_URL="https://<fqdn>/mcp/"
@@ -236,10 +266,34 @@ az containerapp revision list -g rg-cupcake-mcp -n ca-cupcake-mcp \
 
 Want `Running` / `Succeeded`, and a revision that is `Active` and `Healthy`.
 
-**Scale to zero is not "down".** Container Apps drops idle apps to zero
-replicas and cold-starts on the next request — a few seconds' delay that reads
-like an outage but isn't. `replicas: 0` with an `Active`, `Healthy` revision is
-fine. Deactivated is the real off state (see below).
+Want `replicas: 1`. `replicas: 0` with an `Active`, `Healthy` revision means
+the app was created without the pin in Stage 7. It is not down, and the next
+request will start it, but starting it drops every live MCP session. Pin it
+before the event. Deactivated is the real off state (see below).
+
+### "Session was terminated" during a lab
+
+The attendee runs `agent.py` again. A new session starts on the next call and
+nothing is lost: orders and customer IDs are in Table Storage. Then check the
+replica count above. If it is not 1, pin it.
+
+**Check the server is actually down before you restart it.** Most "cannot
+reach it" reports are a company network or VPN blocking
+`*.azurecontainerapps.io`. Run the endpoint check above from a phone on mobile
+data: that separates "the server is down" from "our network blocks it" in ten
+seconds.
+
+To restart it:
+
+```
+az containerapp revision restart -g rg-cupcake-mcp -n ca-cupcake-mcp \
+  --revision $(az containerapp revision list -g rg-cupcake-mcp -n ca-cupcake-mcp \
+               --query "[0].name" -o tsv)
+```
+
+A restart loses no store data. Flavours, stock, orders, customers and the
+admin password are all in the storage account. It does drop every live
+session, and the voucher code starts again.
 
 ## Stage 11 — Security and shutting down
 
@@ -258,9 +312,9 @@ events.
 
 Blast radius is small: no real data, and the storage connection string is a
 Container App secret scoped to one storage account. Nothing reaches the
-Foundry project. The realistic downside is **cost and nuisance** — Container
-Apps scales on demand, so a hammered endpoint runs up a bill and pollutes the
-dashboard you're demoing on.
+Foundry project. The realistic downside is **nuisance and some cost** — pinned
+to one replica the bill has a ceiling, but a hammered endpoint still slows the
+room down and pollutes the dashboard you're demoing on.
 
 ### Lock to your own IP while testing
 
@@ -346,3 +400,7 @@ to Foundry, not here — if the Foundry project is far away, that dominates.
   source repo's URL table shows `/mcp`.
 - `SESSION_COOKIE_SECURE=false` on HTTPS → admin login appears to succeed then
   bounces back to the login page.
+- No `--min-replicas 1 --max-replicas 1` → `session was terminated` part-way
+  through a lab. Stage 7.
+- "You have already had your one real cupcake" → not a fault. It is the limit
+  of one order per customer. A new customer ID clears it.

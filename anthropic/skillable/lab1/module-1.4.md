@@ -12,7 +12,7 @@ items (flavor and quantity), total in cents, pickup time. Two things to
 notice:
 
 - The call passes the schema in 'output_config':
-- The answer is not always the first content block. Claude may return a
+- The answer isn't always the first content block. Claude may return a
   thinking block first, so 'first_text()' picks the first block of type
   'text' rather than reaching for 'content[0]'.
 
@@ -150,4 +150,4 @@ Run the agent, place an order, then type 'receipt'.
 
   > Use your customer ID **@lab.Variable(customerID)** when asked.
 
-**Checkpoint 5.** A schema-valid receipt from a real order, on every run.
+✅ **Checkpoint 5.** A schema-valid receipt from a real order, on every run.

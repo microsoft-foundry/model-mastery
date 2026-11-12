@@ -11,6 +11,8 @@ from html.parser import HTMLParser
 
 from common import REQUIRED_TESTIDS, WORKSPACE
 
+VOID_TAGS = ("br", "img", "input", "meta", "link", "hr")   # no closing tag
+
 
 class _Scan(HTMLParser):
     def __init__(self):
@@ -38,8 +40,14 @@ class _Scan(HTMLParser):
             self.children.setdefault(tid, 0)
             self._stack.append(tid)
             self._depth[tid] = self._d
-        if tag in ("br", "img", "input", "meta", "link", "hr"):
+        if tag in VOID_TAGS:
             self._d -= 1
+
+    def handle_startendtag(self, tag, attrs):
+        # <br/> is already closed by handle_starttag, so do not close it twice.
+        self.handle_starttag(tag, attrs)
+        if tag not in VOID_TAGS:
+            self.handle_endtag(tag)
 
     def handle_endtag(self, tag):
         if self._stack and self._depth[self._stack[-1]] == self._d:

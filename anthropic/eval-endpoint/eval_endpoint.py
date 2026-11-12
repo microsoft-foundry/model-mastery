@@ -86,9 +86,7 @@ async def evaluate(req: Request, api_key: str | None = Header(default=None, alia
 
     try:
         r = client.messages.create(
-            # Generous: Claude may emit a thinking block before the JSON, and
-            # that comes out of the same budget. Too low and the JSON is
-            # truncated mid-string, which surfaces as a parse error per row.
+            # Leaves room for a thinking block before the JSON.
             model=MODEL, max_tokens=2000, system=RUBRIC,
             output_config={"format": {"type": "json_schema", "schema": GRADE_SCHEMA}},
             messages=[{"role": "user", "content": f"QUERY:\n{query}\n\nRESPONSE:\n{response}"}],

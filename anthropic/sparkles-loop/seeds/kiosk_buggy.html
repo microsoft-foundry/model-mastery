@@ -7,7 +7,8 @@
   body { font-family: system-ui, sans-serif; background: #fff4f8; color: #3b2a35; margin: 0; padding: 2rem; }
   h1 { color: #d6336c; }
   .card { background: #fff; border-radius: 12px; padding: 1.5rem; max-width: 520px; box-shadow: 0 4px 14px rgba(0,0,0,.08); }
-  li { padding: .4rem 0; font-size: 1.1rem; }
+  li { padding: .4rem 0; font-size: 1.1rem; cursor: pointer; }
+  li.selected { font-weight: 700; color: #d6336c; }
   button { background: #d6336c; color: #fff; border: 0; padding: .7rem 1.2rem; border-radius: 8px; font-size: 1rem; cursor: pointer; }
 </style>
 </head>
@@ -18,14 +19,19 @@
     <h2>Today's flavors</h2>
     <!-- BUG: only one flavor made it into the list -->
     <ul data-testid="flavor-list">
-      <li>Vanilla Bean</li>
+      <li onclick="pick(this)">Vanilla Bean</li>
     </ul>
     <!-- BUG: the order counter element was never added -->
     <button data-testid="order-btn" onclick="order()">Place order</button>
   </div>
   <script>
     let count = 0;
+    function pick(item) {
+      document.querySelectorAll('li.selected').forEach(li => li.classList.remove('selected'));
+      item.classList.add('selected');
+    }
     function order() {
+      if (!document.querySelector('li.selected')) return;
       count += 1;
       const el = document.querySelector('[data-testid="order-count"]');
       if (el) el.textContent = count;

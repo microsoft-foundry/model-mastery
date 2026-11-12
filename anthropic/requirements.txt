@@ -9,5 +9,6 @@ pytest
 azure-ai-projects>=2.6.0,<2.8
 azure-identity
 azure-monitor-opentelemetry
+claude-agent-sdk==0.2.172        # Lab 2: the kiosk builder in sparkles-hosted/
 # The Foundry IQ knowledge-base scripts (SETUP.md step 4)
 -r foundry-iq/requirements.txt

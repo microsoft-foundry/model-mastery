@@ -1,10 +1,10 @@
 ## Module 1.2: Tools and a personality (15 minutes)
 
-An agent that only chats cannot take an order. To check stock and place
+An agent that only chats can't take an order. To check stock and place
 orders it needs **tools**, and to sound like Sparkles it needs a persona.
 Both come from the Cupcake Store **MCP server**.
 
-> **What is MCP?** The Model Context Protocol is an open standard for
+> **What's MCP?** The Model Context Protocol is an open standard for
 > connecting agents to external systems. An MCP server publishes tools
 > (functions), prompts (reusable instructions), and resources over HTTP. Your
 > agent only needs the URL; the framework discovers everything else.
@@ -88,13 +88,13 @@ python agent.py
 Ask: 'What flavors do you have today?' The agent decides on its own to call
 the store's tools, and answers from live stock.
 
-**Do not order a cupcake yet.** This step is only to prove the tools work.
+**Don't order a cupcake yet.** This step is only to prove the tools work.
 Notice the voice: it has the shop's tools, but it still sounds like a generic
-assistant. Type 'exit' when you are done.
+assistant. Type 'exit' when you're done.
 
 ### Step B: give it a personality
 
-The shop has opinions about how its agent should behave, and it does not want
+The shop has opinions about how its agent should behave, and it doesn't want
 every developer pasting the latest persona into their code. So the persona
 lives on the **server**, not in your repo.
 
@@ -196,15 +196,15 @@ from the server, not from your repo.
 Now order a cupcake. Answer its questions, pick a flavor, and place the order.
 
 > **Copy your customer ID** in the field below. Sparkles gives you an eight-character ID
-> like 'ABCD2345' the first time you order. You will need it later.
+> like 'ABCD2345' the first time you order. You'll need it later.
     @lab.TextBox(customerID)
 
 Watch your order on the order dashboard: the address in 'CUPCAKE_MCP_URL'
-with '/dashboard' in place of '/mcp/' (in a workshop, it is also on screen in
-the room). When your order shows **ready**, it is done; in a workshop, go and
+with '/dashboard' in place of '/mcp/' (in a workshop, it's also on screen in
+the room). When your order shows **ready**, it's done; in a workshop, go and
 collect it.
 
 ![Order dashboard](../images/05-dashboard.png)
 
-**Checkpoint 3.** An end-to-end order through your own agent, and a real
+✅ **Checkpoint 3.** An end-to-end order through your own agent, and a real
 cupcake.

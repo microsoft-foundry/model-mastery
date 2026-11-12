@@ -1,26 +1,33 @@
-# Lab 1: Building an Agent with Claude on Microsoft Foundry
+# Lab 1: Building Agents with Claude on Microsoft Foundry
 
-Welcome to Sparkles, the friendliest little cupcake shop on the internet.
-Sparkles has more customers than staff, so today you will build the agent
-that greets them, takes their orders, answers policy questions from the
-shop's own documents, and reads their handwritten catering requests.
+In this lab, you'll build a customer agent with Claude on Microsoft Foundry, one
+capability at a time. You start with a single prompt in the Foundry playground
+and finish with a Python agent that takes orders, answers questions from the
+shop's own policies, and reads handwritten catering orders.
 
-By the end of this lab you will have:
+The agent is for Sparkles, a small cupcake shop with more customers than staff.
+Each module starts with something the agent can't do yet, then adds what it
+needs: tools for live data, a knowledge base for policies, structured outputs for
+receipts, and vision for handwriting. The last module compares two Claude tiers
+on the same hard order.
 
-- Talked to Claude in the Foundry Playground and changed its behavior with one sentence
-- Built a Python agent on Claude in Foundry
-- Given it tools and a personality from the Cupcake Store MCP server, and ordered a real cupcake
-- Connected the shop's knowledge base in Foundry IQ and watched Claude route between two tool servers
-- Produced a schema-valid receipt with structured outputs
-- Watched Claude read a handwritten order and place it, applying store policy
-- Compared two Claude tiers on the same hard problem
+In this lab, you'll:
+
+- Talk to Claude in the Foundry Playground and change its behavior with one sentence
+- Build a Python agent on Claude in Foundry
+- Give it tools and a personality from the Cupcake Store MCP server, and order a real cupcake
+- Connect the shop's knowledge base in Foundry IQ and watch Claude route between two tool servers
+- Let Claude find the right tool in a catalog of twelve with tool search
+- Produce a schema-valid receipt with structured outputs
+- Watch Claude read a handwritten order and place it, applying store policy
+- Compare two Claude tiers on the same hard problem
 
 **How the lab works.** Every module ends with a checkpoint. Modules 1.4 through
 1.6 are independent, so if you fall behind, skip to the next one. Completed
 code for every module is in 'sparkles-agent/snapshots/'; copy the one you
 need over 'agent.py' and carry on.
 
-**Your environment.** You will use VS Code with the repo open, its terminal,
+**Your environment.** You'll use VS Code with the repo open, its terminal,
 and the Foundry portal in a browser tab. The modules tell you when to open
-each one. The '.env' file at the top of the repo is already filled in for you
+each one. The '.env' file in the 'anthropic' folder is already filled in for you
 unless the instructor says otherwise.

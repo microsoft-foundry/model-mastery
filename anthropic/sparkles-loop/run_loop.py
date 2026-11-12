@@ -2,7 +2,7 @@
 
 Run:  python run_loop.py                first draft is the seeded buggy kiosk
       python run_loop.py --fresh        generator builds the first draft itself
-      python run_loop.py --research     planner does web search first (Module 2.2)
+      python run_loop.py --research     planner does web search first (Module 2.1, Step E)
 
 Set ENABLE_OTEL=1 in .env to trace every step (Module 2.3).
 """

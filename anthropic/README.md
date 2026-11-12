@@ -2,10 +2,12 @@
 
 Two 90-minute hands-on labs for the joint Anthropic + Microsoft Model Mastery
 workshop. Attendees build the Sparkles cupcake shop agent on Claude in
-Microsoft Foundry in the morning (tools, a Foundry IQ knowledge base, vision,
-structured outputs), then make it run unattended in the afternoon: a
-self-verifying build loop, web search and tool search, tracing, and
-evaluations judged by Claude.
+Microsoft Foundry in Lab 1 (tools, tool search, a Foundry IQ knowledge
+base, vision, structured outputs). In Lab 2 Claude takes on more of
+the work and attendees keep control of the result: a self-verifying build
+loop with web search, one agent built with the Claude Agent SDK that works
+inside set limits, tracing, a hosted agent in Foundry, and evaluations
+judged by Claude.
 
 Built on earlier work by Henk Boelman and Shilpa Jain — see [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
 
@@ -14,10 +16,11 @@ Built on earlier work by Henk Boelman and Shilpa Jain — see [THIRD-PARTY-NOTIC
 | | Skillable workshop | On your own |
 | --- | --- | --- |
 | Guide | `skillable/lab1/`, `skillable/lab2/` (one page per module) | `standalone/lab1.md`, `standalone/lab2.md` |
-| Setup | Done for you; your seat's `.env` is pre-filled | [SETUP.md](standalone/SETUP.md), about 30 minutes; a Codespace is optional |
+| Setup | Done for you; your `.env` is pre-filled | [SETUP.md](standalone/SETUP.md), about 30 minutes; a Codespace is optional |
 | Foundry project and knowledge base | The workshop's | Your own |
 | Cupcake Store server | Shared | The shared address, or deploy your own ([cupcake-mcp-setup.md](cupcake-mcp-setup.md), 20 to 30 min) |
-| Eval endpoint (Module 2.4b) | Deployed by instructors | Deploy your own, or skip Step B |
+| Eval endpoint (Module 2.4b) | Set up for each attendee by Skillable | Deploy your own, or skip Step B |
+| Hosted agent (end of Module 2.3) | Deployed by instructors; attendees send it a task | Optional take-home ([sparkles-hosted/README.md](sparkles-hosted/README.md), about 30 min) |
 | Instructor notes | `instructor/` | Not needed |
 
 ## Repo layout
@@ -28,8 +31,9 @@ Built on earlier work by Henk Boelman and Shilpa Jain — see [THIRD-PARTY-NOTIC
 | `skillable/` | The lab pages for the Skillable import, one per module, plus its own copy of `images/` |
 | `sparkles-agent/` | Lab 1 working folder. Attendees edit `agent.py`; `snapshots/` holds the completed file after each module for catch-up |
 | `sparkles-loop/` | Lab 2 planner / generator / evaluator loop with the seeded buggy kiosk and static checks |
+| `sparkles-hosted/` | Module 2.2: the same kiosk job as one agent built with the Claude Agent SDK. Also everything needed to run it as a Foundry hosted agent (instructor demo and take-home) |
 | `sparkles-evals/` | Module 2.4: evaluator registration and cloud eval run scripts |
-| `eval-endpoint/` | The Claude-as-judge eval endpoint service for Module 2.4b (instructors deploy it once per workshop; on your own, optional) |
+| `eval-endpoint/` | The Claude-as-judge eval endpoint service for Module 2.4b (Skillable sets one up for each attendee; on your own, optional) |
 | `foundry-iq/` | Module 1.3: the store document, the ingest script that builds the Foundry IQ knowledge base, and a script that verifies it (run once per workshop, or by you in SETUP.md) |
 | `cupcake-mcp-setup.md` | Runbook for deploying the Cupcake Store MCP server to Azure: resources, deploy, store config, and how to turn it off |
 | `instructor/` | Instructor notes. Ships with neither zip |
@@ -42,7 +46,7 @@ Python 3.10+, then:
 
 ```
 pip install -r requirements.txt
-cp .env.example .env   # fill in per-seat values
+cp .env.example .env   # fill in the values for each lab environment
 ```
 
 The labs read everything from `.env`. No URLs or deployment names are
@@ -56,6 +60,7 @@ new Cupcake Store MCP deployment is a `.env` change only.
 - An Azure AI Search service holding the Foundry IQ knowledge base (see `foundry-iq/`)
 - The eval endpoint (Container Apps) and its project connection (see `eval-endpoint/`)
 - Application Insights connected to the project
+- For the end of Module 2.3: a container registry and the hosted agent, deployed by instructors (see `sparkles-hosted/`)
 
 ## Model deployments expected
 
@@ -72,6 +77,8 @@ HTTP 400 listing the valid ones:
 - Tool search: `tool_search_tool_bm25_20251119`, and its name must be `tool_search_tool_bm25`
 - Structured outputs: `output_config.format` with `json_schema`, and every
   object in a schema must set `"additionalProperties": false`
+- Claude Agent SDK: tested on `claude-agent-sdk` 0.2.172. It includes the
+  program it runs, for Windows, macOS and Linux, so it adds about 240 MB
 
 ## Placeholders to fill before the event
 

@@ -23,8 +23,7 @@ if which in ("code", "both"):
         "type": "azure_ai_evaluator",
         "name": "sparkles_code",
         "evaluator_name": CODE_EVALUATOR,
-        # 0.9: every required test id present and a receipt that parses. A single
-        # missing element scores 0.88, so at 0.5 the buggy kiosk passed.
+        # 0.9: every required test id present and a receipt that parses.
         "initialization_parameters": {"deployment_name": DEPLOYMENT, "pass_threshold": 0.9},
         # No data_mapping: a code-based evaluator receives the whole row as `item`.
     })
@@ -36,6 +35,7 @@ if which in ("endpoint", "both"):
         "data_mapping": {"query": "{{item.query}}", "response": "{{item.response}}"},
     })
 
+# Foundry's evaluations service. The judge is Claude.
 evals_client = project_client().get_openai_client()
 
 ev = evals_client.evals.create(
@@ -73,5 +73,5 @@ for item in evals_client.evals.runs.output_items.list(eval_id=ev.id, run_id=run.
     for res in item.results:
         r = res if isinstance(res, dict) else res.model_dump()
         err = ((r.get("sample") or {}).get("error") or {}).get("message")
-        note = f"  error: {err[:120]}" if err else f"  reason: {str(r.get('reason') or '')[:120]}"
+        note = f"  error: {err[:120]}" if err else f"  reason: {r.get('reason') or ''}"
         print(f"  {r.get('name')}: score={r.get('score')} passed={r.get('passed')}{note}")

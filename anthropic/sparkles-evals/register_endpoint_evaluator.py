@@ -1,8 +1,8 @@
 """Module 2.4b: register the endpoint-based evaluator (Claude is the judge).
 
-The endpoint itself and the project connection to it are created by the
-instructors before the workshop (see eval-endpoint/). Attendees only register
-an evaluator that references the connection by name.
+In the workshop, Skillable sets up the endpoint and the project connection to
+it for each attendee (see eval-endpoint/). Attendees only register an evaluator
+that references the connection by name.
 
 Run:  python register_endpoint_evaluator.py
 """

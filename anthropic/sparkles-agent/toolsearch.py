@@ -1,5 +1,7 @@
-"""Module 2.2: tool search. Sparkles has a growing catalog of tools; instead of
-loading all of them into context, Claude searches for the ones it needs.
+"""Module 1.3 - A bigger toolbox: tool search on Claude in Foundry.
+
+Sparkles has a growing catalog of tools. Instead of loading all of them into
+context, Claude searches for the ones it needs.
 
 Pinned to tool_search_tool_bm25_20251119. The tool name is fixed by the API:
 it must be "tool_search_tool_bm25", and any other name returns HTTP 400.
@@ -7,9 +9,13 @@ it must be "tool_search_tool_bm25", and any other name returns HTTP 400.
 Run:  python toolsearch.py "How many loyalty points does Priya have?"
 """
 
+import os
 import sys
 
-from common import SMART_MODEL, client
+from anthropic import AnthropicFoundry
+from dotenv import load_dotenv
+
+load_dotenv()
 
 CATALOG = {
     "get_flavor_of_the_day": "Return today's featured cupcake flavor",
@@ -36,10 +42,15 @@ tools = [{"type": "tool_search_tool_bm25_20251119", "name": "tool_search_tool_bm
     for name, desc in CATALOG.items()
 ]
 
+client = AnthropicFoundry(
+    api_key=os.environ["FOUNDRY_API_KEY"],
+    base_url=os.environ["FOUNDRY_ENDPOINT"],
+)
+
 question = sys.argv[1] if len(sys.argv) > 1 else "How many loyalty points does Priya have?"
-r = client().messages.create(model=SMART_MODEL, max_tokens=800,
-                             system="You work at the Sparkles cupcake shop. Answer with the shop's tools.",
-                             tools=tools, messages=[{"role": "user", "content": question}])
+r = client.messages.create(model=os.environ["FOUNDRY_MODEL_DEPLOYMENT"], max_tokens=800,
+                           system="You work at the Sparkles cupcake shop. Answer with the shop's tools.",
+                           tools=tools, messages=[{"role": "user", "content": question}])
 
 print("searched:", [b.input for b in r.content if b.type == "server_tool_use"])
 print("found:   ", [ref.tool_name for b in r.content

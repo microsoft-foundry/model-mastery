@@ -34,30 +34,33 @@ both settings took; if an assertion fails, the SDK is older than 12.1.0b2
 The Free tier is enough: it supports knowledge bases (3 per service) and
 semantic ranking with a monthly free allowance, and each subscription gets
 one Free service. Basic is only needed for managed identity. On Free,
-knowledge retrieval and semantic ranker are offered only in some regions
-(East US, West Europe, and Sweden Central among them); check Azure AI Search
-region support before you pick one.
+knowledge retrieval and semantic ranker are offered only in some regions, and
+some of those currently refuse new services. Use the region you chose at the
+top of [SETUP.md](../standalone/SETUP.md), which lists the ones that work. The
+search service doesn't have to be in the same region as your Foundry project.
 
-**Choose two names.** Edit these two lines, then run them. Everything below
+**Choose two names and set your region.** Edit these three lines, then run them. Everything below
 uses them, so keep the same terminal window open.
 
 ```
 RG=my-sparkles-rg          # resource group: any name you like
 SEARCH=my-sparkles-search  # search service: globally unique, lowercase letters, digits, dashes
+REGION=southcentralus      # the region you chose in SETUP.md
 ```
 
 Then paste the rest unchanged:
 
 ```
-az group create -n $RG -l eastus
-az search service create -n $SEARCH -g $RG -l eastus --sku free \
+az group create -n $RG -l $REGION
+az search service create -n $SEARCH -g $RG -l $REGION --sku free \
   --auth-options aadOrApiKey --aad-auth-failure-mode http401WithBearerChallenge
 ```
 
 If your subscription requires an `owner` tag on resource groups, add
 `--tags owner=$USER` to the first command. If the second fails with
-`InsufficientResourcesAvailable`, the region is out of capacity; try another
-region from the list.
+`InsufficientResourcesAvailable`, the region is out of capacity. Set
+`REGION` to the next one on your row of the list in SETUP.md and run the second
+command again.
 
 ## 2. Build the knowledge base
 

@@ -4,7 +4,7 @@ This file's contents are uploaded as the evaluator's code_text. It runs in
 Foundry's sandbox (standard library only, no network, no LLM), so it must be
 self-contained. It scores one row of the dataset.
 
-Row fields (mapped through data_mapping when the eval runs):
+Row fields:
   item["report"]   the static-analysis report from sparkles-loop/checks.py
   item["receipt"]  the receipt JSON string from Lab 1's receipt.py
 

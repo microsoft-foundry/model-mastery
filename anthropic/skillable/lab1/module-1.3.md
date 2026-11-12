@@ -1,21 +1,21 @@
-## Module 1.3: Give it knowledge with Foundry IQ (10 minutes)
+## Module 1.3: Give it knowledge with Foundry IQ (15 minutes)
 
 ### Find the gap
 
 Run your agent and ask two questions:
 
 1. 'What flavors do you have today?' It answers, calling the store's tools.
-2. 'Do you bake with tree nuts?' It cannot, and says so.
+2. 'Do you bake with tree nuts?' It can't, and says so.
 
 Same agent, same session. One question served, one not. It has tools; they
-just do not cover policy. The shop's policies live in a document, and this
+just don't cover policy. The shop's policies live in a document, and this
 module gives the agent that document through **Foundry IQ**.
 
-> **What is Foundry IQ?** The managed knowledge layer in Microsoft Foundry,
+> **What's Foundry IQ?** The managed knowledge layer in Microsoft Foundry,
 > built on Azure AI Search. Your instructors loaded the Sparkles store
 > information (hours, delivery, returns, allergens, loyalty, bulk-order rules)
 > into a knowledge base. Every Foundry IQ knowledge base exposes an **MCP
-> endpoint**, so to your agent it is just another tool server, the same kind
+> endpoint**, so to your agent it's just another tool server, the same kind
 > you connected in Module 1.2.
 
 ### Add the knowledge base
@@ -133,18 +133,42 @@ Run 'python agent.py' and ask, in this order:
 3. 'My order arrived squashed. What can I do?'
 4. 'I need 30 cupcakes for a party on Saturday. Anything I should know?'
 
-Question 1 is the one it could not answer a few minutes ago. Questions 1, 3,
+Question 1 is the one it couldn't answer a few minutes ago. Questions 1, 3,
 and 4 go to the knowledge base; question 2 goes to the store.
 Nothing in your code routes them. Claude reads the two tools' descriptions
 and decides per question. Question 4 should turn up the bulk-order rules
 (72 hours notice, 50 percent deposit); remember that for Module 1.6.
 
 To check an answer against the source, open
-'foundry-iq/docs/cupcake-store-info.md' in VS Code. It is the document the
+'foundry-iq/docs/cupcake-store-info.md' in VS Code. It's the document the
 knowledge base was built from.
 
-**Checkpoint 4.** Your agent answers policy questions from the shop's own
-document, and picks the right server without being told.
+### A bigger toolbox: tool search
+
+Your agent now chooses between two tool servers. A real shop ends up with
+dozens of tools, and sending every one with every request costs context and
+gives the model more wrong options to pick from. With **tool search**, the
+tools are held back and Claude searches for the ones it needs.
+
+Type 'exit' to stop the agent. **Open 'toolsearch.py'** and look at
+**'CATALOG'**: twelve tools, each with a name and a one-line description.
+
+- **'defer_loading'** keeps all twelve out of Claude's context, so it doesn't
+  read every tool for every question.
+- Claude starts with only the search tool and loads just what the question
+  needs.
+
+```
+python toolsearch.py "How many loyalty points does Priya have?"
+```
+
+Output shows three lines: what Claude searched for, which tools the search
+returned, and which one it called. Try a different question, for example
+'Is the shop open on Sunday?', and see it pick a different tool.
+
+✅ **Checkpoint 4.** Your agent answers policy questions from the shop's own
+document, picks the right server without being told, and finds the right
+tool out of twelve without holding them all in context.
 
 > Where this goes in real life: swap the store document for your product
 > docs, your support runbook, or your contracts, and the agent pattern is

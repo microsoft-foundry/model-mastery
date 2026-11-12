@@ -1,7 +1,7 @@
 # Set up on your own
 
-Use this guide if you are taking the labs on your own, not from a Skillable
-workshop seat. In a workshop all of this is done for you and your `.env` is
+Use this guide if you are taking the labs on your own, not in a Skillable
+workshop. In a workshop all of this is done for you and your `.env` is
 pre-filled; skip this file. Plan on about 30 minutes, most of it
 provisioning time rather than typing.
 
@@ -17,6 +17,36 @@ Then follow `lab1.md` and `lab2.md` in this folder. Two things to know:
   [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli), and an
   editor on your own machine, **or** a GitHub account to use a Codespace
 
+## Before you start: choose a region
+
+Choose one Azure region now, and use it for everything this guide creates
+with the Azure CLI: the Search service, Application Insights, and the
+container apps. Pick the one nearest to you.
+
+| Where you are | Use | Avoid |
+| --- | --- | --- |
+| US and Canada | `southcentralus`, `northcentralus`, `westcentralus`, `canadacentral` | `eastus`, `eastus2` and `westus`: they currently refuse new Search services |
+| UK and Europe | `uksouth`, `westeurope`, `swedencentral`, `francecentral`, `switzerlandnorth`, `polandcentral` | `northeurope` and `germanywestcentral`, for the same reason |
+| Japan, Korea, Taiwan | `japaneast`, `koreacentral` | `eastasia` and `southeastasia`: the knowledge base features are not on the Free tier there |
+| Australia | `australiaeast` | |
+
+**Why the list is short.** The knowledge base in step 4 runs on the Free tier
+of Azure AI Search, and only some regions offer what it needs on Free.
+Everything else this guide creates is offered almost everywhere, so Search
+decides.
+
+**Your Foundry project does not have to be in the same region.** Create it
+wherever the Claude models are offered to you, and if you already have one,
+keep it. The agent reaches Foundry, Search, and the Cupcake Store each by its
+own address, so they can be in three different regions.
+
+The later steps say "the region you chose". Keep a note of it.
+
+> This list was checked against
+> [Azure AI Search region support](https://learn.microsoft.com/azure/search/search-region-support)
+> on 2026-09-17. Capacity changes. If creating the Search service fails with
+> `InsufficientResourcesAvailable`, use the next region on your row.
+
 ## 1. Get the code
 
 Pick one. The rest of this guide is the same either way.
@@ -27,10 +57,25 @@ Pick one. The rest of this guide is the same either way.
 git clone <this repo>
 cd model-mastery/anthropic
 python3 -m venv .venv
-source .venv/bin/activate          # Windows: .venv\Scripts\activate
+source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env
 ```
+
+On Windows, in PowerShell, the same steps are:
+
+```
+git clone <this repo>
+cd model-mastery\anthropic
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+Copy-Item .env.example .env
+```
+
+If PowerShell refuses to run `Activate.ps1`, run
+`Set-ExecutionPolicy -Scope Process RemoteSigned` and try again. It applies
+to that window only.
 
 Every script reads the `.env` in `anthropic/`. Run everything from the
 `anthropic/` folder: the `requirements.txt` at the top of the repo is for
@@ -56,7 +101,7 @@ az login --use-device-code
 1. At [ai.azure.com](https://ai.azure.com), create a Foundry project (or open
    one you have).
 2. Deploy two Claude models with Global Standard and keep the default
-   deployment names: `claude-sonnet-5` and `claude-haiku-4-5`.
+   deployment names: `claude-sonnet-5-5` and `claude-haiku-5-5`.
 3. Open the Sonnet deployment's **Details** tab and copy **Endpoint** and
    **Key** into `.env`:
 
@@ -99,8 +144,8 @@ virtual.
 ## 4. The shop's knowledge base (Foundry IQ)
 
 Follow sections 1 to 3 of [foundry-iq/README.md](../foundry-iq/README.md): create
-a Free-tier Azure AI Search service, build the knowledge base, and create a
-query key. Your `.env` then has:
+a Free-tier Azure AI Search service in the region you chose, build the
+knowledge base, and create a query key. Your `.env` then has:
 
 ```
 AZURE_SEARCH_ENDPOINT="https://<service>.search.windows.net"

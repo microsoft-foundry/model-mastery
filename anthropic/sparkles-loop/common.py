@@ -83,10 +83,7 @@ def setup_tracing() -> bool:
         connection_string=conn,
         # Keep every span. Without this the portal shows a sampling warning.
         sampling_ratio=1.0,
-        # The Anthropic SDK uses httpx, so that instrumentation stays on and
-        # gives us a child span per model call. The standard-library clients
-        # only carry the distro's own housekeeping calls (VM metadata lookup,
-        # settings fetch), which are noise in the Search view.
+        # Keep httpx on for a span per model call, and turn the others off.
         instrumentation_options={
             "urllib": {"enabled": False},
             "urllib3": {"enabled": False},

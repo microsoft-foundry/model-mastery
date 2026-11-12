@@ -1,0 +1,8 @@
+# Pinned: this is what the container runs, so a rebuild gets the same code.
+claude-agent-sdk==0.2.172
+mcp>=1.24.0,<2
+azure-ai-agentserver-invocations==1.2.0
+azure-identity==1.25.3
+# checks.py and common.py from sparkles-loop/ need these two
+anthropic==1.9.0
+python-dotenv==1.2.3

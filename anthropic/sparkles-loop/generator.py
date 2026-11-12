@@ -13,8 +13,9 @@ SYSTEM = f"""You are the GENERATOR. Produce ONE self-contained index.html (inlin
 and JS, no external files, no CDN) that satisfies every acceptance criterion in
 the spec. Use exactly these data-testid values on the matching elements:
 {", ".join(REQUIRED_TESTIDS)}. Each flavor must be its own child element inside
-the element with data-testid="flavor-list". Respond with the file contents only:
-no prose, no code fences."""
+the element with data-testid="flavor-list". Tapping a flavor selects and
+highlights it. The order button adds one to the order count only when a flavor
+is selected. Respond with the file contents only: no prose, no code fences."""
 
 
 def generate(c, spec: dict, critique: str = "") -> str:

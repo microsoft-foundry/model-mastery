@@ -5,6 +5,9 @@ rather than typing: the image build takes 10 to 15 minutes, and the Container
 Apps environment takes a few more. Start section 2 in its own terminal and
 carry on with something else while it runs.
 
+The commands here are written for bash, so they run as they are on a Mac, on
+Linux, and in a Codespace. On Windows, run them in a Codespace.
+
 ## What this is
 
 A small web service that grades one agent response at a time. You deploy it,
@@ -34,8 +37,8 @@ that sounds helpful but quotes the wrong refund window scores 0.0.
 Two pieces have to exist for Foundry to reach it: the **service** (step 2) and
 a **project connection** holding its URL and key (step 3).
 
-- **Skillable workshop:** instructors deploy it once before the event, and
-  attendees register an evaluator against the pre-created connection.
+- **Skillable workshop:** Skillable sets one up for each attendee, and attendees
+  register an evaluator against the connection already in their lab environment.
 - **On your own:** deploy your own copy with the steps below, or skip
   Module 2.4b. Step A of Module 2.4 (the code-based evaluator) does not need
   it.
@@ -54,7 +57,7 @@ pip install -r requirements.txt
 uvicorn eval_endpoint:app --port 8000
 ```
 
-It reads the `.env` at the repo root, so there is nothing else to fill in.
+It reads the `.env` in the `anthropic` folder, so there is nothing else to fill in.
 
 Leave that running and open a second terminal for the test:
 
@@ -86,7 +89,7 @@ Apps environment, then create the app pointing at that image.
 
 ```
 RG=my-sparkles-rg            # resource group: any name you like
-REGION=eastus                # any region you can deploy Container Apps in
+REGION=southcentralus        # the region you chose in SETUP.md
 ACR=mysparklesacr01          # registry: globally unique, letters and digits only
 EVAL_SECRET=$(openssl rand -base64 24)
 echo "$EVAL_SECRET"
@@ -186,7 +189,7 @@ curl https://$FQDN/health
 Expect the model name back:
 
 ```
-{"ok":true,"model":"claude-sonnet-5"}
+{"ok":true,"model":"claude-sonnet-5-5"}
 ```
 
 > ### ✅ Got the model name?
@@ -207,7 +210,7 @@ request.
 
 ### Fill in six settings in `.env`
 
-The same `.env` at the top of the repo you have been using all along. Do not
+The same `.env` in the `anthropic` folder you have been using all along. Do not
 make a second one.
 
 Nothing earlier in the labs fills these six in, and they are only used here.

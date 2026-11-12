@@ -1,10 +1,8 @@
-## Module 2.1: The agent that checks its own work (30 minutes)
+## Module 2.1: The agent that checks its own work (20 minutes)
 
 An agent that runs for a minute needs a good
-prompt. An agent that runs for an hour needs a way to tell whether it is still
-on track, because nobody is watching each step. That is a major difference
-between a short task and a long one: something has to check the work and decide
-whether to go again.
+prompt. An agent that runs for an hour needs something to check the work and
+decide whether it's done or needs another try.
 
 The loop has four steps: write down what "done" looks like, build, check the
 result against it, and send back what failed. It repeats until the result
@@ -12,26 +10,20 @@ passes or the rounds run out. The rest of this lab builds on this loop.
 
 ![Three agents, one loop](../images/05.0-loop-visual.png)
 
-One line of intent goes in on the left. The planner turns it into a spec: what
-has to be true when the job is done, not how to build it. The generator builds
-to that spec. The evaluator checks the result and answers PASS or FAIL with a
-critique. FAIL sends the critique back to the generator and another round
-starts. PASS ends the loop.
-
-The checking is done by a script that reads the page and counts what is on it,
-and the evaluator judges that report. Nothing in the loop is specific to what
-is being built, which is the point of it.
+One line of intent goes in on the left. The planner turns it into a spec, the
+generator builds to it, and the evaluator answers PASS or FAIL with a critique.
+FAIL starts another round. PASS ends the loop.
 
 Three scripts, three roles, two Claude deployments:
 
 - **planner.py**: one line of intent in, a testable spec out. Sonnet.
 - **generator.py**: spec in, a single-file kiosk page out. Haiku, the faster
-  and cheaper tier. It writes the most tokens by far, and it is working from a
+  tier. It writes the most tokens by far, and it's working from a
   spec rather than judging anything.
 - **evaluator.py**: the spec plus hard evidence in, PASS or FAIL out, with a
   critique. Sonnet, because the work is only ever as good as the judge.
 
-In this module you will run each one on its own first, so you see what it
+In this module you'll run each one on its own first, so you see what it
 produces, and then run the whole loop.
 
 Your terminal is in 'sparkles-agent' from Lab 1. Go up one folder and into
@@ -42,7 +34,7 @@ cd ../sparkles-loop
 ```
 
 That line works in PowerShell and in bash. If you opened a new terminal
-(**Terminal > New Terminal** in VS Code) and it is in the 'anthropic' folder,
+(**Terminal > New Terminal** in VS Code) and it's in the 'anthropic' folder,
 use 'cd sparkles-loop'.
 
 ### Step A: the planner (5 minutes)
@@ -50,8 +42,8 @@ use 'cd sparkles-loop'.
 **Open 'planner.py' before you run it.** Its job is to turn a request into a
 list of things that can be checked without a person looking.
 
-- **'PROMPT'** is the request: a kiosk page with today's flavors, a special,
-  and a running order count. Clear to a human, but there is nothing in it a
+- **'PROMPT'** is the request: a kiosk page with today's flavors that customers
+  can tap to select, a special, and a running order count. Clear to a human, but there's nothing in it a
   script could test.
 - **'SPEC_SCHEMA'** makes the answer come back as fixed JSON rather than prose.
 - **'SYSTEM'** tells Claude every acceptance criterion has to name a
@@ -65,36 +57,33 @@ python planner.py
 Read the spec it prints: three or four features, each with an acceptance
 criterion, saved to 'workspace/spec.json'.
 
-Each criterion names a part of the page by its 'data-testid'. That is a label
-in the HTML that lets a script find the part, however the page looks. The spec
-always covers these five:
+Each criterion names a part of the page by its 'data-testid'. That's a label
+in the HTML that lets a script find the part, however the page looks.
+The spec always covers these five:
 
 | 'data-testid' | The element | What has to be true |
 |---|---|---|
-| 'title' | the shop name at the top | it is there |
-| 'flavor-list' | today's flavors | it is there, and holds three flavors, each its own element |
-| 'special' | the special of the day | it is there |
-| 'order-btn' | the Place Order button | it is there |
-| 'order-count' | the running count of orders | it is there |
+| 'title' | the shop name at the top | it's there |
+| 'flavor-list' | today's flavors | it's there, and holds at least three flavors, each its own element |
+| 'special' | the special of the day | it's there |
+| 'order-btn' | the Place Order button | it's there |
+| 'order-count' | the running count of orders | it's there |
 
-That list is the contract for the rest of the module. The generator is told to
+Every step in this module uses this list. The generator is told to
 use exactly these names, 'checks.py' counts them, and the evaluator passes or
-fails the page on them. It is also the same list the code evaluator scores in
+fails the page on them. It's also the same list the code evaluator scores in
 Module 2.4.
 
-### Step B: the generator, with a planted bug (5 minutes)
+### Step B: the generator, with a planted bug (3 minutes)
 
-The generator writes the kiosk. It takes the spec the planner just produced
-and returns a single HTML page for the shop counter: today's flavors, the
-special, and a button that places an order. One file, no build step, nothing
-to install.
+The generator turns the spec into one HTML page for the shop counter.
 
 **Open 'generator.py'.**
 
-- **'SYSTEM'** is its entire brief: here is the spec, return one
+- **'SYSTEM'** is its entire brief: here's the spec, return one
   self-contained HTML file.
 - It has no memory between sprints and never sees the evaluator's reasoning,
-  only the critique text fed back in. That is what stops it grading its own
+  only the critique text fed back in. That's what stops it grading its own
   work.
 - **'seed()'** loads a first draft instead of generating one.
 
@@ -106,12 +95,8 @@ mistakes in it. Open it in VS Code and find the two 'BUG' comments.
   called 'order-count' that was never added to the page. It checks the element
   exists first, so nothing breaks; the count just never appears.
 
-In a browser the page looks finished. You would have to check it against the
-spec to find either problem.
-
-**Why start broken?** If the generator writes the first draft it might get it
-right, and then there is no loop to watch. A page we know is wrong fails the
-first round every time.
+**Why start broken?** A page we know is wrong fails the first round every
+time, so there's always a loop to watch.
 
 ```
 python generator.py --seed
@@ -120,14 +105,13 @@ python generator.py --seed
 That copies the page to 'workspace/index.html', which is what everything
 downstream reads.
 
-### Step C: evidence and the evaluator (10 minutes)
+### Step C: evidence and the evaluator (4 minutes)
 
-Something has to decide whether the page the generator produced actually meets
-the spec. That happens in two parts: first a script measures the page, then
-Claude decides whether those measurements are good enough.
+First a script measures the page, then Claude decides whether that's good
+enough.
 
-**Open 'checks.py'.** No Claude here. It is ordinary Python that opens
-'workspace/index.html' and counts what is on the page.
+**Open 'checks.py'.** No Claude here. It's ordinary Python that opens
+'workspace/index.html' and counts what's on the page.
 
 - **'evidence()'** reports which 'data-testid' names it found and how many
   items are in each list.
@@ -159,9 +143,9 @@ It should FAIL on the flavor list and the missing order counter, and write a
 critique saying exactly what to change. That critique is what the generator
 gets handed in the next step.
 
-### Step D: the whole loop (10 minutes)
+### Step D: the whole loop (4 minutes)
 
-**Open 'run_loop.py'.** It is short, because the three scripts you just ran
+**Open 'run_loop.py'.** It's short, because the three scripts you just ran
 do the work. This one decides what happens next.
 
 - **'MAX_SPRINTS'** stops it after three rounds. Without a limit, a page the
@@ -174,9 +158,12 @@ python run_loop.py
 Sprint 1 loads the seeded draft and fails. Sprint 2 hands the critique to the
 generator, which rewrites the page. The evaluator checks again and passes.
 
-**Now look at what it built.** Open 'workspace/index.html' in a browser: in
-the VS Code Explorer, open 'sparkles-loop', then 'workspace', right-click
-'index.html', choose **Reveal in File Explorer**, then double-click the file.
+**Now look at what it built.** In the terminal, run this to open the page in
+your browser:
+
+```
+Invoke-Item workspace\index.html
+```
 
 ![The finished kiosk page](../images/05.1-kiosk.png)
 
@@ -185,23 +172,55 @@ the VS Code Explorer, open 'sparkles-loop', then 'workspace', right-click
   maximum
 - The special of the day, called out on its own
 - The order counter next to the button, showing 0
-- Click **Place Order** and the count goes to 1
+- Tap a flavor and it's highlighted. Click the order button and the count goes
+  to 1. Until a flavor is selected, the button does nothing
 
-Open 'seeds/kiosk_buggy.html' alongside it to see where it started: one flavor,
-and no counter at all.
+Open the first draft alongside it to see where it started: one flavor, and no
+counter at all.
 
-**This page is a demo. It does not take real orders.** The button only adds
-one to the number on screen. What matters is what the loop showed: it built a
-page to a spec, caught its own mistake, and fixed it. A real kiosk would be
-built the same way.
+```
+Invoke-Item seeds\kiosk_buggy.html
+```
+
+**This page is a demo. It doesn't take real orders.** What matters is what the
+loop showed: it built a page to a spec, caught its own mistake, and fixed it.
 
 > Why this matters. When an agent writes more code than you can review, the
-> review becomes the bottleneck. The fix is not a better prompt for the
-> writer; it is a separate judge with its own evidence. The loop is only
-> ever as good as that judge, so that is where the effort goes.
-
-**Checkpoint 8.** A planted bug caught by a Claude evaluator and fixed by a
-Claude generator, with no human review.
+> review becomes the bottleneck. A separate judge with its own evidence helps
+> more than a better prompt for the writer, so that's where the effort goes.
 
 > Try it: run 'python run_loop.py --fresh' to let the generator build the
 > first draft itself instead of using the seed.
+
+### Step E: ground the plan in web search (4 minutes)
+
+In Lab 1 the agent learned what the shop knows, from Foundry IQ. **Web search**,
+built into Claude on Foundry, adds what's happening now. Use it when a plan
+depends on information newer than the model's training.
+
+**Open 'websearch.py'.** 'QUESTION' is what gets asked, and you can edit it.
+Claude runs the searches and reads the results on the server side, so your
+script never fetches a web page itself.
+
+```
+python websearch.py
+```
+
+Claude searches, reads a few results, and recommends a special with its
+sources listed at the bottom. Compare with your neighbor and see whether you
+got the same answer.
+
+Now let the planner do the same before it writes the spec, inside the full
+loop:
+
+```
+python run_loop.py --research
+```
+
+The research notes print first, then the spec. The flavors and the special
+now come from live results, so your kiosk won't match your neighbor's. The
+rest of the loop is unchanged: same generator, same checks, same judge.
+
+✅ **Checkpoint 8.** A planted bug caught by a Claude evaluator and fixed by a
+Claude generator, with a written verdict for every round, and a plan grounded
+in live web search with its sources.

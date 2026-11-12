@@ -15,6 +15,7 @@ Numbered in the order they appear in the labs. The same set is duplicated in
 | `06-search-cards.png` | 2.3 | Application Insights, Investigate > Search, View as traces, `sparkles-session` cards |
 | `07-search-trace.png` | 2.3 | One run opened as a timeline: planner, then each round |
 | `08-trace-tree-chart.png` | 2.3 | The trace tree with the score-per-round line chart |
+| `08.1-hosted-agent-trace.png` | 2.3 | The hosted agent's trace in the Foundry portal, Trajectories tab, with `execute_tool Write (refused)` selected |
 | `09-eval-code-report.png` | 2.4 | The code evaluator's report, four rows scored |
 | `10-eval-llm-report.png` | 2.4 | The Claude-judged report, with a score and reason per row |
 

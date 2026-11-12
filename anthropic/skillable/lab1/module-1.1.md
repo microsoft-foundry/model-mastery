@@ -1,6 +1,6 @@
 ## Module 1.1: Hello world agent (10 minutes)
 
-Time to build the agent in Python. The framework you will use wraps a chat
+Time to build the agent in Python. The framework you'll use wraps a chat
 model, a conversation session, and tools into one 'Agent' object.
 
 ### Check your settings
@@ -8,13 +8,13 @@ model, a conversation session, and tools into one 'Agent' object.
 Open VS Code from the shortcut on the Desktop. It should open with the
 project loaded into the workspace.
 
-Open the '.env' file at the top of the repo. It needs three values, all from
+Open the '.env' file in the 'anthropic' folder. It needs three values, all from
 the Playground's **Details** tab:
 
 ```
 FOUNDRY_ENDPOINT="https://<your-resource>.services.ai.azure.com/anthropic"
 FOUNDRY_API_KEY="<key>"
-FOUNDRY_MODEL_DEPLOYMENT="claude-sonnet-5"
+FOUNDRY_MODEL_DEPLOYMENT="claude-sonnet-5-5"
 ```
 
 If your instructor pre-filled the file, leave it alone. If not, copy
@@ -64,7 +64,7 @@ python agent.py
 
 Type 'Hello!' and you should get a friendly reply. Type 'exit' to stop.
 
-**Checkpoint 2.** A terminal conversation with your own agent.
+✅ **Checkpoint 2.** A terminal conversation with your own agent.
 
 If it fails: a '401' means the key or endpoint is wrong; 'DeploymentNotFound'
-means the deployment name does not match the portal exactly.
+means the deployment name doesn't match the portal exactly.
