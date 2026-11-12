@@ -7,7 +7,6 @@ Numbered in the order they appear in the labs. The same set is duplicated in
 |---|---|---|
 | `01-foundry-home.png` | 1.0 | Foundry home after sign-in |
 | `02-deployments.png` | 1.0 | Build > Models > Deployments, both Claude deployments listed |
-| `03-playground.png` | 1.0 | The Sonnet deployment open in the Playground, Instructions panel visible |
 | `04-details-endpoint-key.png` | 1.1 | Deployment Details tab showing **Endpoint** and **Key** |
 | `05-dashboard.png` | 1.2 | The cupcake order dashboard with an order on it |
 | `05.0-loop-visual.png` | 2.1 | The planner / generator / evaluator loop diagram |

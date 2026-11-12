@@ -5,13 +5,16 @@ with a system prompt, then see what it can't answer without your shop's real
 information. The rest of this lab works to add information to our agent.
 
 ### Sign in
-1. Sign in to the virtual machine with the following credentials:
-   
+1. Sign in to Windows on the virtual machine with these credentials:
+
    **Username**: `@lab.VirtualMachine(Windows11).Username`  
    **Password**: `@lab.VirtualMachine(Windows11).Password`
 
-1. Open **Microsoft Edge** from the Windows taskbar.
-2. Go to `https://ai.azure.com` and sign in with the workshop account:
+   If clicking the password doesn't fill it in, click inside the Windows
+   password box and try again. If it still doesn't work, type it in by hand.
+
+2. Open **Microsoft Edge** from the Windows taskbar.
+3. Go to `https://ai.azure.com` and sign in with the workshop account:
 
 	**Username**: `@lab.CloudPortalCredential(User1).Username`  
 	**Access Pass**: `@lab.CloudPortalCredential(User1).AccessToken`
@@ -75,13 +78,8 @@ it can't answer. Never assume an answer is grounded unless you gave it the facts
 
 Module 1.2 gives it the real menu. Module 1.3 gives it the real policies.
 
-### Look at the code
-
-Click the **Continue in code** button. This is the same call you'll make from Python in the
-next module. Note the three things it needs: the endpoint, a key, and the
-deployment name.
-
-![Playground](../images/03-playground.png)
+> The Playground's **Continue in code** button offers starter code for this
+> chat. You won't need it today because you'll work in VS Code next.
 
 ✅ **Checkpoint 1.** You have talked to Claude on Foundry, and seen what it does
 and doesn't know about your shop.
